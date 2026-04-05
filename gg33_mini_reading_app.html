@@ -6,6 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>GG33 Mini Reading</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9518227647614114" crossorigin="anonymous"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -29,6 +30,29 @@ body {
   flex-direction: column;
   height: 100dvh;
 }
+
+/* NAV */
+nav {
+  background: #0d0b08;
+  border-bottom: 1px solid var(--br);
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+nav a {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-decoration: none;
+  padding: 10px 14px;
+  border-right: 1px solid var(--br);
+  transition: color .2s;
+}
+nav a:last-child { border-right: none; }
+nav a:hover, nav a.active { color: var(--gold); }
 
 /* HEADER */
 header {
@@ -242,6 +266,11 @@ input[type=text]::placeholder { color: var(--dim); font-size: 14px; }
 </style>
 </head>
 <body>
+
+<nav>
+  <a href="index.html">Newsletter</a>
+  <a href="gg33_mini_reading_app.html" class="active">Reading</a>
+</nav>
 
 <header>
   <div class="logo">GG33</div>
