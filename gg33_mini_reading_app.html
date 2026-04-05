@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>GG33 Mini Reading</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold2: #e8cc7a;
+  --dim: #6b5a2e;
+  --bg: #090806;
+  --bg2: #111009;
+  --bg3: #1c1a11;
+  --tx: #e2d9c4;
+  --tx2: #9a9080;
+  --br: rgba(201,168,76,0.18);
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; overflow:hidden; }
+body {
+  background: var(--bg);
+  color: var(--tx);
+  font-family: 'Crimson Pro', serif;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--br);
+  flex-shrink: 0;
+  background: var(--bg);
+}
+.logo {
+  font-family: 'Cinzel', serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: 4px;
+}
+.logo-sub {
+  font-family: 'Cinzel', serif;
+  font-size: 7px;
+  letter-spacing: 5px;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* MAIN SCROLLABLE AREA */
+main {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 20px 100px;
+}
+
+/* INPUT SECTION */
+.input-section { margin-bottom: 20px; }
+.field-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+input[type=text] {
+  background: var(--bg2);
+  border: 1px solid var(--br);
+  color: var(--tx);
+  font-family: 'Crimson Pro', serif;
+  font-size: 18px;
+  padding: 14px 16px;
+  border-radius: 2px;
+  width: 100%;
+  outline: none;
+  margin-bottom: 8px;
+}
+input[type=text]:focus { border-color: var(--gold); }
+input[type=text]::placeholder { color: var(--dim); font-size: 14px; }
+.format-hint {
+  font-size: 13px;
+  color: var(--dim);
+  font-style: italic;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.go-btn {
+  width: 100%;
+  background: var(--gold);
+  color: var(--bg);
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  border: none;
+  padding: 16px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.go-btn:active { opacity: 0.8; }
+
+/* RESULT */
+.result {
+  display: none;
+  animation: fadeIn .4s ease;
+}
+.result.show { display: block; }
+
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--br);
+}
+.result-lp {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+.result-zodiac {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 1px;
+}
+.result-zi { font-size: 28px; }
+
+.reading-box {
+  background: var(--bg2);
+  border: 1px solid var(--br);
+  border-left: 3px solid var(--gold);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.reading-text {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--tx);
+  font-style: italic;
+}
+
+.upsell {
+  padding: 14px 0;
+  border-top: 1px solid var(--br);
+  margin-bottom: 12px;
+}
+.upsell-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.upsell-text {
+  font-size: 15px;
+  color: var(--tx2);
+  line-height: 1.5;
+}
+.upsell-text a {
+  color: var(--gold);
+  text-decoration: none;
+}
+.copy-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 13px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all .15s;
+}
+.copy-btn:active { background: var(--gold); color: var(--bg); }
+.copied-msg {
+  display: none;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.reset-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--dim);
+  color: var(--dim);
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 12px;
+  margin-top: 12px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.reset-btn:active { border-color: var(--gold); color: var(--gold); }
+
+/* ERROR */
+.error-msg {
+  display: none;
+  color: #c46;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+.error-msg.show { display: block; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GG33</div>
+  <div class="logo-sub">Mini Reading Tool</div>
+</header>
+
+<main>
+  <div class="input-section" id="inputSection">
+    <span class="field-label">Paste or type any birthday format</span>
+    <input type="text" id="rawDate" placeholder="9/9/1989  ·  Sept 9th 1989  ·  09091989…" autocomplete="off" autocorrect="off" spellcheck="false">
+    <div class="format-hint">Any format works — just paste it</div>
+    <button class="go-btn" onclick="generate()">Generate Reading</button>
+    <div class="error-msg" id="errMsg">Couldn't read that date — try MM/DD/YYYY</div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="result-header">
+      <div>
+        <div class="result-lp" id="resultLP"></div>
+        <div class="result-zodiac" id="resultZodiac"></div>
+      </div>
+      <div class="result-zi" id="resultZi"></div>
+    </div>
+    <div class="reading-box">
+      <div class="reading-text" id="readingText"></div>
+    </div>
+    <div class="upsell">
+      <div class="upsell-label">Want the full picture?</div>
+      <div class="upsell-text">Get your full report at <a href="https://square.link/u/sHFh39O5" target="_blank">square.link/u/sHFh39O5</a> — $124.91</div>
+    </div>
+    <button class="copy-btn" onclick="copyReading()">Copy Reading</button>
+    <div class="copied-msg" id="copiedMsg">Copied!</div>
+    <button class="reset-btn" onclick="reset()">New Reading</button>
+  </div>
+</main>
+
+<script>
+function copyReading() {
+  const reading = document.getElementById('readingText').textContent;
+  const upsell = '\n\nWant the full report? $124.91 at square.link/u/sHFh39O5';
+  const full = reading + upsell;
+
+  // Try modern clipboard API first
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(full).then(() => {
+      showCopied();
+    }).catch(() => {
+      fallbackCopy(full);
+    });
+  } else {
+    fallbackCopy(full);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.top = '0';
+  ta.style.left = '0';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showCopied();
+  } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+function showCopied() {
+  const msg = document.getElementById('copiedMsg');
+  msg.style.display = 'block';
+  setTimeout(() => { msg.style.display = 'none'; }, 2000);
+}
+
+
+// Lunar New Year dates (year → [month, day] of CNY start)
+const CNY = {
+  1900:[1,31],1901:[2,19],1902:[2,8],1903:[1,29],1904:[2,16],1905:[2,4],
+  1906:[1,25],1907:[2,13],1908:[2,2],1909:[1,22],1910:[2,10],1911:[1,30],
+  1912:[2,18],1913:[2,6],1914:[1,26],1915:[2,14],1916:[2,3],1917:[1,23],
+  1918:[2,11],1919:[2,1],1920:[2,20],1921:[2,8],1922:[1,28],1923:[2,16],
+  1924:[2,5],1925:[1,25],1926:[2,13],1927:[2,2],1928:[1,23],1929:[2,10],
+  1930:[1,30],1931:[2,17],1932:[2,6],1933:[1,26],1934:[2,14],1935:[2,4],
+  1936:[1,24],1937:[2,11],1938:[1,31],1939:[2,19],1940:[2,8],1941:[1,27],
+  1942:[2,15],1943:[2,5],1944:[1,25],1945:[2,13],1946:[2,2],1947:[1,22],
+  1948:[2,10],1949:[1,29],1950:[2,17],1951:[2,6],1952:[1,27],1953:[2,14],
+  1954:[2,3],1955:[1,24],1956:[2,12],1957:[1,31],1958:[2,18],1959:[2,8],
+  1960:[1,28],1961:[2,15],1962:[2,5],1963:[1,25],1964:[2,13],1965:[2,2],
+  1966:[1,21],1967:[2,9],1968:[1,30],1969:[2,17],1970:[2,6],1971:[1,27],
+  1972:[2,15],1973:[2,3],1974:[1,23],1975:[2,11],1976:[1,31],1977:[2,18],
+  1978:[2,7],1979:[1,28],1980:[2,16],1981:[2,5],1982:[1,25],1983:[2,13],
+  1984:[2,2],1985:[2,20],1986:[2,9],1987:[1,29],1988:[2,17],1989:[2,6],
+  1990:[1,27],1991:[2,15],1992:[2,4],1993:[1,23],1994:[2,10],1995:[1,31],
+  1996:[2,19],1997:[2,7],1998:[1,28],1999:[2,16],2000:[2,5],2001:[1,24],
+  2002:[2,12],2003:[2,1],2004:[1,22],2005:[2,9],2006:[1,29],2007:[2,18],
+  2008:[2,7],2009:[1,26],2010:[2,14],2011:[2,3],2012:[1,23],2013:[2,10],
+  2014:[1,31],2015:[2,19],2016:[2,8],2017:[1,28],2018:[2,16],2019:[2,5],
+  2020:[1,25],2021:[2,12],2022:[2,1],2023:[1,22],2024:[2,10],2025:[1,29]
+};
+
+const ZODIAC_CYCLE = ['Rat','Ox','Tiger','Cat','Dragon','Snake','Horse','Goat','Monkey','Rooster','Dog','Pig'];
+// 1900 = Rat (index 0)
+const BASE_YEAR = 1900;
+
+function getZodiac(year, month, day) {
+  // Determine Chinese year (before CNY = previous solar year's animal)
+  let cny = CNY[year];
+  let chineseYear = year;
+  if (cny) {
+    let cnyDate = new Date(year, cny[0]-1, cny[1]);
+    let bd = new Date(year, month-1, day);
+    if (bd < cnyDate) chineseYear = year - 1;
+  }
+  let idx = ((chineseYear - BASE_YEAR) % 12 + 12) % 12;
+  return ZODIAC_CYCLE[idx];
+}
+
+// ─── LP CALCULATION ───────────────────────────────────────────────────────────
+function digitSum(n) {
+  return String(Math.abs(n)).split('').reduce((a,c)=>a+parseInt(c),0);
+}
+function reduce(n) {
+  while (n > 9 && ![11,22,33].includes(n)) n = digitSum(n);
+  return n;
+}
+function calcLP(m, d, y) {
+  let ms = digitSum(m), ds = digitSum(d), ys = digitSum(y);
+  let m1 = reduce(ms + ds + ys);
+  if (m1 === 2) m1 = 11;
+  if (d > 9 && ![11,22].includes(d)) {
+    let m2 = reduce(ms + d + ys);
+    if (m2 === 2) m2 = 11;
+    if ((m1===33&&m2===6)||(m1===6&&m2===33)) return '33/6';
+    if ((m1===22&&m2===4)||(m1===4&&m2===22)) return '22/4';
+  }
+  return m1;
+}
+
+// ─── SYNONYM POOLS ────────────────────────────────────────────────────────────
+const LP = {
+  1:  ['natural-born leader','unstoppable pioneer','independent force','self-made originator','dominant force'],
+  3:  ['natural communicator','creative powerhouse','expressive visionary','artistic force','bold storyteller'],
+  4:  ['hard-working foundation','methodical enforcer','disciplined operator','structured powerhouse','law-and-order force'],
+  5:  ['freedom-loving adventurer','constant change seeker','adaptable hustler','versatile maverick','free-spirited force'],
+  6:  ['natural nurturer','magnetic caretaker','compassionate protector','devoted guardian','selfless provider'],
+  7:  ['deep thinker','relentless truth-seeker','analytical mind','spiritual investigator','intuitive researcher'],
+  8:  ['CEO-energy powerhouse','money magnet','commanding authority','natural executive','wealth architect'],
+  9:  ['relentless finisher','powerful closer','completion force','unstoppable closer','project ender'],
+  11: ['master intuitive','visionary with higher sight','spiritual powerhouse','awakened mind','elevated perceiver'],
+  22: ['master builder','empire architect','large-scale visionary','structural genius','world-shaper'],
+  33: ['master influencer','transformational force','trailblazer','world-changing presence','large-scale impact maker']
+};
+
+const ZOD = {
+  Rat:     ['strategic intelligence','sharp mind','resourceful operator','calculated thinker','money-smart hustler'],
+  Ox:      ['unstoppable determination','grounded strength','iron will','relentless grinder','immovable force'],
+  Tiger:   ['bold risk-taker','fearless warrior','dominant energy','fierce competitor','powerful aggressor'],
+  Cat:     ['psychological mastermind','mind game specialist','calculated observer','sharp psychologist','strategic manipulator'],
+  Dragon:  ['magnetic powerhouse','commanding presence','larger-than-life energy','natural born ruler','electrifying force'],
+  Snake:   ['deep wisdom','calculated intensity','magnetic mystery','strategic patience','quietly dangerous'],
+  Horse:   ['stubborn powerhouse','hardworking force','relentless worker','iron-willed grinder','determined operator'],
+  Goat:    ['luxury-driven powerhouse','kill-with-kindness operator','refined wealth seeker','high-taste finisher','silk-glove strategist'],
+  Monkey:  ['high-IQ hands-on genius','reverse engineer','technical mastermind','problem-solving powerhouse','mechanical genius'],
+  Rooster: ['blunt and loyal force','argumentative truth-teller','direct communicator','no-filter operator','straight-shooter'],
+  Dog:     ['authority challenger','sharp memory keeper','playful rebel','anti-establishment force','freedom-loving loyalist'],
+  Pig:     ['over-indulgent diplomat','naturally funny connector','life-of-the-party operator','social genius','charming excess seeker']
+};
+
+const ZI = {
+  Rat:'🐀',Ox:'🐂',Tiger:'🐯',Cat:'🐱',Dragon:'🐉',Snake:'🐍',
+  Horse:'🐴',Goat:'🐐',Monkey:'🐒',Rooster:'🐓',Dog:'🐕',Pig:'🐷'
+};
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+// ─── SENTENCE BUILDERS ────────────────────────────────────────────────────────
+const OPENERS = [
+  (lp, zod) => `You're a ${lp} with ${zod}`,
+  (lp, zod) => `Built as a ${lp} carrying ${zod}`,
+  (lp, zod) => `A ${lp} armed with ${zod}`,
+];
+
+const CONNECTORS_1 = [
+  '— built to','— wired to','— designed to','— made to',
+];
+
+const BUILT_FOR = [
+  (lp, zod) => `dominate through ${zod} while operating as a ${lp}`,
+  (lp, zod) => `move through the world as a ${lp} powered by ${zod}`,
+  (lp, zod) => `execute at the highest level — ${lp} energy fused with ${zod}`,
+  (lp, zod) => `lead with the force of a ${lp} and the edge of ${zod}`,
+];
+
+const CLOSERS = [
+  'This blueprint has serious power and natural instincts that most people will never understand.',
+  'This blueprint operates on a different level — the combination is rare and the potential is massive.',
+  'This is not a common blueprint. The energy here is built for impact.',
+  'This blueprint hits different. The combination creates an edge that cannot be taught.',
+  'Most people will sense the energy before they understand it. This blueprint commands rooms.',
+];
+
+function buildReading(lpKey, zodiac) {
+  const lpPool = LP[lpKey];
+  const zodPool = ZOD[zodiac];
+  if (!lpPool || !zodPool) return null;
+
+  // Pick two DIFFERENT phrases from each pool for variety
+  const lp1 = pick(lpPool);
+  let lp2 = pick(lpPool);
+  while (lp2 === lp1 && lpPool.length > 1) lp2 = pick(lpPool);
+
+  const z1 = pick(zodPool);
+  let z2 = pick(zodPool);
+  while (z2 === z1 && zodPool.length > 1) z2 = pick(zodPool);
+
+  const opener = pick(OPENERS)(lp1, z1);
+  const conn = pick(CONNECTORS_1);
+  const built = pick(BUILT_FOR)(lp2, z2);
+  const closer = pick(CLOSERS);
+
+  return `${opener} ${conn} ${built}. ${closer}`;
+}
+
+// ─── SMART DATE PARSER ───────────────────────────────────────────────────────
+const MONTHS = {
+  jan:1, feb:2, mar:3, apr:4, may:5, jun:6,
+  jul:7, aug:8, sep:9, oct:10, nov:11, dec:12,
+  january:1, february:2, march:3, april:4, june:6,
+  july:7, august:8, september:9, october:10, november:11, december:12
+};
+
+function parseDate(raw) {
+  if (!raw || !raw.trim()) return null;
+  let s = raw.trim().toLowerCase();
+
+  // Strip ordinals
+  s = s.replace(/(\d+)(st|nd|rd|th)/g, '$1');
+
+  // Find month name first, remove it from string
+  let monthFromName = null;
+  for (let name in MONTHS) {
+    let re = new RegExp('\\b' + name + '\\b');
+    if (re.test(s)) {
+      monthFromName = MONTHS[name];
+      s = s.replace(re, ' ');
+      break;
+    }
+  }
+
+  let nums = s.match(/\d+/g);
+  if (!nums) return null;
+
+  // Pure digit string: 09091989 or 991989
+  if (nums.length === 1 && nums[0].length >= 6) {
+    let n = nums[0];
+    if (n.length === 8) {
+      let mm = parseInt(n.slice(0,2));
+      let dd = parseInt(n.slice(2,4));
+      let yy = parseInt(n.slice(4,8));
+      if (mm > 12 && dd <= 12) { let t=mm; mm=dd; dd=t; }
+      return valid(mm, dd, yy);
+    }
+    if (n.length === 6) {
+      let a = parseInt(n.slice(0,2));
+      let b = parseInt(n.slice(2,4));
+      let y2 = parseInt(n.slice(4,6));
+      let yy = y2 < 30 ? 2000+y2 : 1900+y2;
+      if (a >= 1 && a <= 12 && b >= 1 && b <= 31) return valid(a, b, yy);
+      if (b >= 1 && b <= 12 && a >= 1 && a <= 31) return valid(b, a, yy);
+    }
+    return null;
+  }
+
+  // Step 1: find 4-digit year first — always takes priority
+  let year = null;
+  let rest = [];
+  for (let n of nums) {
+    let v = parseInt(n);
+    if (!year && n.length === 4 && v >= 1900 && v <= 2025) {
+      year = v;
+    } else {
+      rest.push(v);
+    }
+  }
+
+  // Step 2: if no 4-digit year, look for 2-digit year at end
+  if (!year && rest.length > 0) {
+    let last = rest[rest.length - 1];
+    if (last >= 0 && last <= 99) {
+      year = last < 30 ? 2000 + last : 1900 + last;
+      rest = rest.slice(0, -1);
+    }
+  }
+
+  if (!year) return null;
+
+  // Step 3: determine month and day from rest
+  let m, d;
+  if (monthFromName) {
+    m = monthFromName;
+    d = rest[0];
+  } else if (rest.length >= 2) {
+    m = rest[0]; d = rest[1];
+    if (m > 12 && d <= 12) { let t=m; m=d; d=t; }
+  } else {
+    return null;
+  }
+
+  return valid(m, d, year);
+}
+
+function valid(m, d, y) {
+  if (!m||!d||!y) return null;
+  m=parseInt(m); d=parseInt(d); y=parseInt(y);
+  if (m<1||m>12||d<1||d>31||y<1900||y>2025) return null;
+  return {m, d, y};
+}
+
+// ─── MAIN FUNCTION ────────────────────────────────────────────────────────────
+function generate() {
+  const raw = document.getElementById('rawDate').value;
+  const err = document.getElementById('errMsg');
+  err.classList.remove('show');
+
+  const parsed = parseDate(raw);
+  if (!parsed) { err.classList.add('show'); return; }
+
+  const {m, d, y} = parsed;
+  const lp = calcLP(m, d, y);
+  const lpKey = typeof lp === 'string' ? parseInt(lp.split('/')[0]) : lp;
+  const zodiac = getZodiac(y, m, d);
+  const reading = buildReading(lpKey, zodiac);
+
+  if (!reading) { err.classList.add('show'); return; }
+
+  document.getElementById('resultLP').textContent = `Life Path ${lp}`;
+  document.getElementById('resultZodiac').textContent = zodiac;
+  document.getElementById('resultZi').textContent = ZI[zodiac] || '';
+  document.getElementById('readingText').textContent = reading;
+
+  document.getElementById('inputSection').style.display = 'none';
+  const res = document.getElementById('result');
+  res.classList.add('show');
+}
+
+function reset() {
+  document.getElementById('rawDate').value = '';
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('inputSection').style.display = 'block';
+  document.getElementById('errMsg').classList.remove('show');
+}
+
+document.addEventListener('keydown', e => { if (e.key==='Enter') generate(); });
+</script>
+</body>
+</html>
