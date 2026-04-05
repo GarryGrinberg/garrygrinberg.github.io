@@ -299,7 +299,7 @@ input[type=text]::placeholder { color: var(--dim); font-size: 14px; }
     </div>
     <div class="upsell">
       <div class="upsell-label">Want the full picture?</div>
-      <div class="upsell-text">Get your full report at <a href="https://square.link/u/sHFh39O5" target="_blank">square.link/u/sHFh39O5</a> — $124.91</div>
+      <div class="upsell-text">Get your full report at <a href="https://square.link/u/sHFh39O5" target="_blank">square.link/u/sHFh39O5</a> — $134</div>
     </div>
     <button class="copy-btn" onclick="copyReading()">Copy Reading</button>
     <div class="copied-msg" id="copiedMsg">Copied!</div>
@@ -310,7 +310,7 @@ input[type=text]::placeholder { color: var(--dim); font-size: 14px; }
 <script>
 function copyReading() {
   const reading = document.getElementById('readingText').textContent;
-  const upsell = '\n\nWant the full report? $124.91 at square.link/u/sHFh39O5';
+  const upsell = '\n\nWant the full report? $134 at square.link/u/sHFh39O5';
   const full = reading + upsell;
 
   // Try modern clipboard API first
