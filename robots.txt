@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gg33readings.com/sitemap.xml
