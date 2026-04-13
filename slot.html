@@ -1109,10 +1109,10 @@ function spinReel(idx, finalPos, delay, nearMiss=false){
   // before we begin the transition. This is more reliable than setTimeout.
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      const duration = nearMiss ? (delay / 1000) + 0.6 : (delay / 1000);
+      const duration = delay / 1000;
       const easing = nearMiss 
-        ? 'cubic-bezier(0.1, 0, 0.1, 1)' 
-        : 'cubic-bezier(0.2, 0, 0.2, 1)';
+        ? 'cubic-bezier(0.3, 0, 0.1, 1)' 
+        : 'cubic-bezier(0.3, 0, 0.2, 1)';
       
       reel.style.transition = `transform ${duration}s ${easing}`;
       reel.style.transform = `translateY(-${finalY}px)`;
