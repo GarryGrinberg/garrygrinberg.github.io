@@ -13,13 +13,14 @@
   --glow:rgba(255,165,0,0.4);--glow2:rgba(255,165,0,0.15);
   --master:#ff44ff;--mg:rgba(255,68,255,0.5);
   --green:#44ff88;
+  --wheel-base:#080400; --wheel-mid:#2c1a08; --wheel-hi:#41260c;
 }
 /* ─── SKIN THEMES ──────────────────── */
-body.skin-amethyst{--gold:#aa55ff;--gold2:#cc88ff;--gold3:#dd99ff;--bg:#0a0518;--panel:#140a24;--panel2:#1e0e30;--glow:rgba(170,85,255,0.4);--glow2:rgba(170,85,255,0.15);--master:#ff66ff;--mg:rgba(255,102,255,0.5);}
-body.skin-bloodmoon{--gold:#ff4444;--gold2:#ff7777;--gold3:#ff9999;--bg:#1a0505;--panel:#220a0a;--panel2:#2e0f0f;--glow:rgba(255,68,68,0.4);--glow2:rgba(255,68,68,0.15);--master:#ff44ff;--mg:rgba(255,68,255,0.5);}
-body.skin-emerald{--gold:#00dd88;--gold2:#44ffaa;--gold3:#88ffcc;--bg:#021a0e;--panel:#042416;--panel2:#063020;--glow:rgba(0,221,136,0.4);--glow2:rgba(0,221,136,0.15);--master:#44ffcc;--mg:rgba(68,255,204,0.5);}
-body.skin-diamond{--gold:#77bbff;--gold2:#99ccff;--gold3:#bbddff;--bg:#050a18;--panel:#081024;--panel2:#0c1630;--glow:rgba(119,187,255,0.4);--glow2:rgba(119,187,255,0.15);--master:#aa88ff;--mg:rgba(170,136,255,0.5);}
-body.skin-obsidian{--gold:#cccccc;--gold2:#dddddd;--gold3:#ffffff;--bg:#080808;--panel:#111111;--panel2:#191919;--glow:rgba(200,200,200,0.3);--glow2:rgba(200,200,200,0.1);--master:#ffffff;--mg:rgba(255,255,255,0.3);}
+body.skin-amethyst{--gold:#aa55ff;--gold2:#cc88ff;--gold3:#dd99ff;--bg:#0a0518;--panel:#140a24;--panel2:#1e0e30;--glow:rgba(170,85,255,0.4);--glow2:rgba(170,85,255,0.15);--master:#ff66ff;--mg:rgba(255,102,255,0.5); --wheel-base:#05020c; --wheel-mid:#1d0f33; --wheel-hi:#301755;}
+body.skin-bloodmoon{--gold:#ff4444;--gold2:#ff7777;--gold3:#ff9999;--bg:#1a0505;--panel:#220a0a;--panel2:#2e0f0f;--glow:rgba(255,68,68,0.4);--glow2:rgba(255,68,68,0.15);--master:#ff44ff;--mg:rgba(255,68,255,0.5); --wheel-base:#0d0202; --wheel-mid:#2b0808; --wheel-hi:#400a0a;}
+body.skin-emerald{--gold:#00dd88;--gold2:#44ffaa;--gold3:#88ffcc;--bg:#021a0e;--panel:#042416;--panel2:#063020;--glow:rgba(0,221,136,0.4);--glow2:rgba(0,221,136,0.15);--master:#44ffcc;--mg:rgba(68,255,204,0.5); --wheel-base:#010d07; --wheel-mid:#052614; --wheel-hi:#0a3d20;}
+body.skin-diamond{--gold:#77bbff;--gold2:#99ccff;--gold3:#bbddff;--bg:#050a18;--panel:#081024;--panel2:#0c1630;--glow:rgba(119,187,255,0.4);--glow2:rgba(119,187,255,0.15);--master:#aa88ff;--mg:rgba(170,136,255,0.5); --wheel-base:#02050c; --wheel-mid:#0a1733; --wheel-hi:#122855;}
+body.skin-obsidian{--gold:#cccccc;--gold2:#dddddd;--gold3:#ffffff;--bg:#080808;--panel:#111111;--panel2:#191919;--glow:rgba(200,200,200,0.3);--glow2:rgba(200,200,200,0.1);--master:#ffffff;--mg:rgba(255,255,255,0.3); --wheel-base:#040404; --wheel-mid:#151515; --wheel-hi:#222222;}
 /* ─── SHOP PANEL ───────────────────── */
 .shop-panel{background:var(--panel);border:1px solid rgba(255,165,0,0.2);border-radius:8px;padding:16px;margin-top:14px;}
 .shop-title{text-align:center;font-size:10px;letter-spacing:2px;color:var(--gold3);margin-bottom:12px;}
@@ -100,7 +101,7 @@ nav a:hover,nav a.active{color:var(--gold);}
 @keyframes paylinePulse{0%{opacity:0.7;stroke-width:2.5;}100%{opacity:1;stroke-width:3.5;}}
 @keyframes paylineDotPop{0%{r:0;opacity:0;}60%{r:9;opacity:1;}100%{r:6;opacity:1;}}
 @keyframes paylineRing{0%{r:6;opacity:0.5;stroke-width:2;}100%{r:20;opacity:0;stroke-width:0.5;}}
-.reel-wrap{flex:1;max-width:120px;height:240px;background:linear-gradient(180deg, rgba(8,4,0,1) 0%, rgba(44,26,8,1) 25%, rgba(65,38,12,1) 50%, rgba(44,26,8,1) 75%, rgba(8,4,0,1) 100%);border:2px solid #fff2cc;border-radius:6px;overflow:hidden;position:relative;box-shadow:0 0 5px #fff, 0 0 15px var(--gold), 0 0 30px var(--gold), inset 0 0 10px var(--gold), inset 0 0 20px var(--gold);}
+.reel-wrap{flex:1;max-width:120px;height:240px;background:linear-gradient(180deg, var(--wheel-base) 0%, var(--wheel-mid) 25%, var(--wheel-hi) 50%, var(--wheel-mid) 75%, var(--wheel-base) 100%);border:2px solid #fff2cc;border-radius:6px;overflow:hidden;position:relative;box-shadow:0 0 5px #fff, 0 0 15px var(--gold), 0 0 30px var(--gold), inset 0 0 10px var(--gold), inset 0 0 20px var(--gold);}
 /* Center payline highlight */
 .reel-wrap::before{content:'';position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:80px;border-top:1px solid rgba(255,165,0,0.3);border-bottom:1px solid rgba(255,165,0,0.3);z-index:2;pointer-events:none;background:rgba(255,165,0,0.03);}
 /* Top/bottom fade */
