@@ -94,16 +94,16 @@ nav a:hover,nav a.active{color:var(--gold);}
 .reels-area{padding:18px 14px;display:flex;gap:8px;justify-content:center;background:linear-gradient(180deg,#1c1204 0%,#2a1c06 100%);border-bottom:2px solid var(--gold);position:relative;}
 /* Payline SVG overlay */
 .payline-svg{position:absolute;inset:0;z-index:10;pointer-events:none;overflow:visible;}
-.payline-glow{stroke:rgba(255,165,0,0.3);stroke-width:12;stroke-linecap:round;fill:none;filter:blur(4px);}
-.payline-line{stroke:var(--gold);stroke-width:3;stroke-linecap:round;fill:none;filter:drop-shadow(0 0 6px rgba(255,215,0,0.9)) drop-shadow(0 0 12px rgba(255,165,0,0.5));animation:paylinePulse 1s ease-in-out infinite alternate;}
-.payline-dot{fill:var(--gold);filter:drop-shadow(0 0 8px rgba(255,215,0,1));animation:paylineDotPop 0.35s cubic-bezier(0.175,0.885,0.32,1.275) forwards;}
+.payline-glow{stroke:var(--glow);stroke-width:12;stroke-linecap:round;fill:none;filter:blur(4px);}
+.payline-line{stroke:var(--gold);stroke-width:3;stroke-linecap:round;fill:none;filter:drop-shadow(0 0 6px var(--gold)) drop-shadow(0 0 12px var(--glow));animation:paylinePulse 1s ease-in-out infinite alternate;}
+.payline-dot{fill:var(--gold);filter:drop-shadow(0 0 8px var(--gold));animation:paylineDotPop 0.35s cubic-bezier(0.175,0.885,0.32,1.275) forwards;}
 .payline-ring{fill:none;stroke:var(--gold);stroke-width:2;opacity:0.4;animation:paylineRing 1.2s ease-out infinite;}
 @keyframes paylinePulse{0%{opacity:0.7;stroke-width:2.5;}100%{opacity:1;stroke-width:3.5;}}
 @keyframes paylineDotPop{0%{r:0;opacity:0;}60%{r:9;opacity:1;}100%{r:6;opacity:1;}}
 @keyframes paylineRing{0%{r:6;opacity:0.5;stroke-width:2;}100%{r:20;opacity:0;stroke-width:0.5;}}
 .reel-wrap{flex:1;max-width:120px;height:240px;background:linear-gradient(180deg, var(--wheel-base) 0%, var(--wheel-mid) 25%, var(--wheel-hi) 50%, var(--wheel-mid) 75%, var(--wheel-base) 100%);border:2px solid #fff2cc;border-radius:6px;overflow:hidden;position:relative;box-shadow:0 0 5px #fff, 0 0 15px var(--gold), 0 0 30px var(--gold), inset 0 0 10px var(--gold), inset 0 0 20px var(--gold);}
 /* Center payline highlight */
-.reel-wrap::before{content:'';position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:80px;border-top:1px solid rgba(255,165,0,0.3);border-bottom:1px solid rgba(255,165,0,0.3);z-index:2;pointer-events:none;background:rgba(255,165,0,0.03);}
+.reel-wrap::before{content:'';position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:80px;border-top:1px solid var(--glow);border-bottom:1px solid var(--glow);z-index:2;pointer-events:none;background:var(--glow2);}
 /* Top/bottom fade */
 .reel-wrap::after{content:'';position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,0.9) 0%,transparent 25%,transparent 75%,rgba(0,0,0,0.9) 100%);}
 .reel{display:flex;flex-direction:column;align-items:center;will-change:transform;}
