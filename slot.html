@@ -364,9 +364,9 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
       <div class="win-msg" id="winMsg">ENTER YOUR BIRTHDAY<br>TO BEGIN YOUR JOURNEY</div>
     </div>
     <div class="controls">
-      <button class="btn-bet" onclick="changeBet(-5)">BET<br>-5</button>
+      <button class="btn-bet" onclick="changeBet(-500)">BET<br>-500</button>
       <button class="btn-spin" id="spinBtn" onclick="spin()">▶ SPIN</button>
-      <button class="btn-bet" onclick="changeBet(5)">BET<br>+5</button>
+      <button class="btn-bet" onclick="changeBet(500)">BET<br>+500</button>
     </div>
     <div class="stat-row" style="border-top: 1px solid rgba(255,165,0,0.2); border-bottom: none; background: var(--panel2); padding: 12px 14px;">
        <div class="audio-controls" style="display: flex; gap: 12px; align-items: center;">
@@ -412,7 +412,7 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
   <div class="friend-panel" id="friendPanel">
     <div class="friend-header">
       <div class="friend-title">READING FOR A FRIEND</div>
-      <div class="friend-cost">100 Credits</div>
+      <div class="friend-cost">10,000 Credits</div>
     </div>
     <div class="friend-row">
       <input type="text" class="friend-input" id="friendInput" placeholder="MM/DD/YYYY" autocomplete="off">
@@ -594,7 +594,7 @@ const KNOW={
 };
 
 // ─── STATE & PERSISTENCE ──────────────────────────
-let credits=100,bet=5,spinning=false,lpNum=null,luckyNum=null,bdRaw=null;
+let credits=10000,bet=500,spinning=false,lpNum=null,luckyNum=null,bdRaw=null;
 let reelGrid = [[],[],[]];
 let discovered=new Set();
 let lifetimeSpins=0;
@@ -606,7 +606,7 @@ let activeSkin = 'classic';
 // Reading Economy State
 let readingCount=0; // how many readings taken today
 let lastReadingTime=0; // timestamp of last reading for decay
-const BASE_READING_COST = 100;
+const BASE_READING_COST = 10000;
 
 const Persistence = {
     save() {
@@ -632,7 +632,7 @@ const Persistence = {
         if (!data) data = await this.loadFromDB();
         
         if (data) {
-            credits = data.credits ?? 100;
+            credits = data.credits ?? 10000;
             discovered = new Set(data.discovered || []);
             lifetimeSpins = data.spins ?? 0;
             ownedSkins = data.skins || ['classic'];
@@ -1685,7 +1685,7 @@ function updateUI(){
   const btn = document.getElementById('btnFriend');
   if(btn) btn.disabled = (credits < cost);
 }
-function changeBet(d){if(spinning)return;bet=Math.max(1,Math.min(credits,bet+d));updateUI();}
+function changeBet(d){if(spinning)return;bet=Math.max(500,Math.min(credits,bet+d));updateUI();}
 function setMsg(msg,isMaster,isJP){
   const el=document.getElementById('winMsg');
   el.textContent=msg;el.className='win-msg';
@@ -1800,11 +1800,11 @@ function showAdRefill(){
 }
 
 function claimAdCredits(){
-  credits += 100;
+  credits += 10000;
   updateUI();
   Persistence.save();
   document.getElementById('adOverlay').classList.remove('show');
-  setMsg('+100 CREDITS EARNED!',false);
+  setMsg('+10000 CREDITS EARNED!',false);
   sfxWin();
   if(typeof fireEffect === 'function') fireEffect('win');
   if(adCountdownInterval){ clearInterval(adCountdownInterval); adCountdownInterval = null; }
@@ -1812,10 +1812,10 @@ function claimAdCredits(){
 
 function skipAd(){
   // Give a small amount even if they skip — keeps them playing
-  credits += 25;
+  credits += 2500;
   updateUI();
   document.getElementById('adOverlay').classList.remove('show');
-  setMsg('+25 CREDITS (PARTIAL)',false);
+  setMsg('+2500 CREDITS (PARTIAL)',false);
   if(adCountdownInterval){ clearInterval(adCountdownInterval); adCountdownInterval = null; }
 }
 
