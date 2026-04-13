@@ -1115,7 +1115,6 @@ function spinReel(idx, finalPos, delay, nearMiss=false){
           void wrap.offsetWidth;
           wrap.classList.add('reel-flash');
         }
-        if(idx === 2) { try { burstFromReels(); } catch(ex){} }
       };
       reel.addEventListener('transitionend', onEnd);
       
