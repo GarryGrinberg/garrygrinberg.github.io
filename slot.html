@@ -806,6 +806,22 @@ const chiptune = {
         g.connect(audioCtx.destination);
         o.start();
         o.stop(audioCtx.currentTime + 0.1);
+    },
+    playReelAnticipation(durationMs) {
+        if (!sfxOn) return;
+        const dur = durationMs / 1000;
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(40, audioCtx.currentTime); 
+        o.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + dur);
+        g.gain.setValueAtTime(0.0, audioCtx.currentTime);
+        g.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + (dur * 0.8));
+        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        o.start();
+        o.stop(audioCtx.currentTime + dur);
     }
 };
 
@@ -1041,7 +1057,7 @@ function spin(forceJP){
   if(isNearMiss && !turboOn){
     document.querySelectorAll('.reel-wrap')[2].classList.add('anticipation');
     vib([10, 50, 10]);
-    chiptune.playTension(1.5);
+    chiptune.playReelAnticipation(r3dur);
     tempo = 160; // Speed up music
   }
   
