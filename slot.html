@@ -327,8 +327,8 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
 
 <!-- STICKY CREDIT BAR -->
 <div class="sticky-credits" id="stickyCredits">
-  <div class="sc-item"><span class="sc-label">CREDITS</span><span class="sc-val" id="scCredits">100</span></div>
-  <div class="sc-item"><span class="sc-label">BET</span><span class="sc-val" id="scBet">5</span></div>
+  <div class="sc-item"><span class="sc-label">CREDITS</span><span class="sc-val" id="scCredits">10,000</span></div>
+  <div class="sc-item"><span class="sc-label">BET</span><span class="sc-val" id="scBet">500</span></div>
   <div class="sc-item" id="scLpWrap" style="display:none;"><span class="sc-label">LP</span><span class="sc-lp" id="scLP"></span></div>
   <button class="sc-spin-btn" id="scSpinBtn" onclick="document.querySelector('.machine').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(spin,300);" disabled>▶ SPIN</button>
 </div>
@@ -349,8 +349,8 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
   <div class="machine">
     <div class="marquee-bar"><span class="marquee-text">&#9733; GG33 LUCKY NUMBER SLOT &#9733; DISCOVER ALL 11 NUMBERS &#9733; 1 IN A MILLION JACKPOT &#9733; FREE READING PRIZE &#9733; MASTER NUMBERS PAY BIG &#9733;&nbsp;&nbsp;&nbsp;</span></div>
     <div class="stat-row">
-      <div class="stat-box"><div class="stat-lbl">Credits</div><div class="stat-val" id="creditsVal">100</div></div>
-      <div class="stat-box"><div class="stat-lbl">Bet</div><div class="stat-val" id="betVal">5</div></div>
+      <div class="stat-box"><div class="stat-lbl">Credits</div><div class="stat-val" id="creditsVal">10,000</div></div>
+      <div class="stat-box"><div class="stat-lbl">Bet</div><div class="stat-val" id="betVal">500</div></div>
       <div class="stat-box"><div class="stat-lbl">Win</div><div class="stat-val green" id="winVal">0</div></div>
     </div>
     <div class="reels-area">
@@ -458,7 +458,7 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
         <div style="color: #666; font-size: 8px;">[ TRANSMISSION RECEPTION ]</div>
     </div>
     <div class="ad-timer" id="adTimer">Watch for <span id="adCountdown">5</span>s to earn credits</div>
-    <button class="btn-ad-claim" id="btnAdClaim" onclick="claimAdCredits()" disabled>REFILL +100</button>
+    <button class="btn-ad-claim" id="btnAdClaim" onclick="claimAdCredits()" disabled>REFILL +10,000</button>
     <button class="btn-ad-skip" onclick="skipAd()">SKIP (STAY BROKE)</button>
   </div>
 </div>
