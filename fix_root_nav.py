@@ -1,23 +1,27 @@
 import re
 
-files = ["slot.html", "archive.html", "about.html", "privacy-policy.html", "terms.html"]
+files = ["slot.html", "archive.html", "about.html", "privacy-policy.html", "terms.html", "index.html"]
 
 for f in files:
     with open(f, 'r') as file:
         content = file.read()
     
-    # We will simply find the <nav> block and replace it.
     match = re.search(r'<nav>.*?</nav>', content, re.DOTALL)
     if match:
         old_nav = match.group(0)
         
-        # Build new nav based on active state
+        c_i = ' class="active"' if f == 'index.html' else ''
+        c_a = ' class="active"' if f == 'archive.html' else ''
+        c_s = ' class="active"' if f == 'slot.html' else ''
+        c_o = ' class="active"' if f == 'about.html' else ''
+        c_t = ' class="active"' if f == 'terms.html' else ''
+        
         new_nav = "<nav>\n"
-        new_nav += f'  <a href="index.html"{" class=\\"active\\"" if f == "index.html" else ""}>Home</a>\n'
-        new_nav += f'  <a href="archive.html"{" class=\\"active\\"" if f == "archive.html" else ""}>Archive</a>\n'
-        new_nav += f'  <a href="slot.html"{" class=\\"active\\"" if f == "slot.html" else ""}>Game</a>\n'
-        new_nav += f'  <a href="about.html"{" class=\\"active\\"" if f == "about.html" else ""}>About</a>\n'
-        new_nav += f'  <a href="terms.html"{" class=\\"active\\"" if f == "terms.html" else ""}>Terms</a>\n'
+        new_nav += f'  <a href="index.html"{c_i}>Home</a>\n'
+        new_nav += f'  <a href="archive.html"{c_a}>Archive</a>\n'
+        new_nav += f'  <a href="slot.html"{c_s}>Game</a>\n'
+        new_nav += f'  <a href="about.html"{c_o}>About</a>\n'
+        new_nav += f'  <a href="terms.html"{c_t}>Terms</a>\n'
         new_nav += "</nav>"
         
         content = content.replace(old_nav, new_nav)
