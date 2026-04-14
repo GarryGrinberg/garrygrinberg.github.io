@@ -151,7 +151,7 @@ nav a:hover,nav a.active{color:var(--gold);}
 .ach-title{font-size:10px;color:var(--gold2);letter-spacing:3px;text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,165,0,0.2);}
 .ach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
 .ach-item{aspect-ratio:1;background:#000;border:2px solid rgba(255,165,0,0.12);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;position:relative;padding:4px;}
-.ach-item.locked{filter:grayscale(1) brightness(0.3);}
+.ach-item.locked{opacity: 0.6; border-color: rgba(255,255,255,0.1);}
 .ach-item.unlocked{border-color:var(--gold);box-shadow:0 0 8px var(--glow);}
 .ach-item.unlocked:hover{transform:scale(1.08);box-shadow:0 0 16px var(--glow);}
 .ach-item.mach.unlocked{border-color:var(--master);box-shadow:0 0 10px var(--mg);}
@@ -247,6 +247,7 @@ nav a:hover,nav a.active{color:var(--gold);}
 @keyframes streakPop{0%{transform:scale(0) translateX(50px);opacity:0;}100%{transform:scale(1) translateX(0);opacity:1;}}
 
 .audio-btn.off{opacity:0.4;filter:grayscale(1);}
+.btn-unlock.off { opacity: 0.35; filter: grayscale(1); text-decoration: line-through; }
 .turbo-btn{background:rgba(255,0,0,0.1);border:1px solid rgba(255,0,0,0.3);border-radius:4px;padding:6px 10px;color:#f44;font-family:'Press Start 2P',monospace;font-size:7px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;letter-spacing:1px;}
 .turbo-btn:hover{background:rgba(255,0,0,0.2);border-color:#f44;}
 .turbo-btn.active{background:rgba(255,0,0,0.3);border-color:#ff4444;box-shadow:0 0 15px rgba(255,68,68,0.4);color:#fff;text-shadow:0 0 5px #fff;}
@@ -298,6 +299,48 @@ nav a:hover,nav a.active{color:var(--gold);}
 .btn-ad-claim:hover{background:linear-gradient(135deg,#dd7700,#ffb530);}
 .btn-ad-claim:disabled{opacity:.4;cursor:not-allowed;background:linear-gradient(135deg,#666,#888);}
 .btn-ad-skip{width:100%;padding:10px;margin-top:6px;background:transparent;border:1px solid rgba(255,165,0,0.15);border-radius:4px;color:rgba(255,165,0,0.45);font-family:'Press Start 2P',monospace;font-size:8px;cursor:pointer;}
+
+/* ─── BIG WIN OVERLAY (Cinematic) ────────────── */
+.bw-overlay { display:none; position:fixed; inset:0; z-index:1000; align-items:center; justify-content:center; flex-direction:column; cursor:pointer; overflow:hidden; background:rgba(0,0,0,0.92); }
+.bw-overlay.show { display:flex; }
+/* Radial glow behind content instead of spinning rays */
+.bw-overlay::before { content:''; position:absolute; inset:0; z-index:0; background:radial-gradient(ellipse 60% 55% at 50% 50%, rgba(60,40,0,0.55) 0%, rgba(0,0,0,0) 70%); animation:bwBgPulse 2.5s ease-in-out infinite alternate; }
+.bw-overlay.mega-tier::before { background:radial-gradient(ellipse 60% 55% at 50% 50%, rgba(80,0,80,0.55) 0%, rgba(0,0,0,0) 70%); animation:bwBgPulseMega 2.5s ease-in-out infinite alternate; }
+@keyframes bwBgPulse { 0%{background:radial-gradient(ellipse 55% 50% at 50% 50%, rgba(40,25,0,0.4) 0%, rgba(0,0,0,0) 65%);} 100%{background:radial-gradient(ellipse 70% 65% at 50% 50%, rgba(90,55,0,0.65) 0%, rgba(0,0,0,0) 75%);} }
+@keyframes bwBgPulseMega { 0%{background:radial-gradient(ellipse 55% 50% at 50% 50%, rgba(60,0,60,0.4) 0%, rgba(0,0,0,0) 65%);} 100%{background:radial-gradient(ellipse 70% 65% at 50% 50%, rgba(120,0,120,0.65) 0%, rgba(0,0,0,0) 75%);} }
+/* Hidden ray container (kept for JS compat, just invisible) */
+.bw-rays { display:none; }
+.bw-ray { display:none; }
+/* Coin particle canvas */
+canvas.bw-coins { position:absolute; inset:0; z-index:2; pointer-events:none; }
+/* Content area */
+.bw-content { position:relative; z-index:3; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; padding:20px; }
+/* Title styling — big, bold, pixel-art outlined text */
+.bw-label { font-family:'Press Start 2P',monospace; font-size:12px; letter-spacing:4px; color:rgba(255,215,0,0.6); text-transform:uppercase; margin-bottom:8px; opacity:0; animation:bwSlideIn 0.4s 0.2s ease-out forwards; }
+.bw-title { font-family:'Press Start 2P',monospace; font-size:36px; line-height:1.2; text-align:center; text-transform:uppercase; color:#ffd700; margin-bottom:10px; opacity:0; animation:bwTitlePop 0.6s 0.3s cubic-bezier(0.175,0.885,0.32,1.275) forwards; -webkit-text-stroke:2px #884400; paint-order:stroke fill; text-shadow: 0 0 30px rgba(255,215,0,0.8), 0 0 60px rgba(255,165,0,0.4), 4px 4px 0 #553300, -1px -1px 0 #ffeeaa; }
+.bw-overlay.mega-tier .bw-title { color:#ff66ff; -webkit-text-stroke:2px #660066; text-shadow: 0 0 30px rgba(255,68,255,0.8), 0 0 60px rgba(170,0,255,0.4), 4px 4px 0 #440044, -1px -1px 0 #ffaaff; }
+.bw-overlay.mega-tier .bw-label { color:rgba(255,170,255,0.7); }
+@keyframes bwTitlePop { 0%{opacity:0;transform:scale(2) rotate(-3deg);filter:blur(4px);} 60%{opacity:1;transform:scale(0.92) rotate(1deg);filter:blur(0);} 80%{transform:scale(1.06) rotate(-0.5deg);} 100%{opacity:1;transform:scale(1) rotate(0);} }
+@keyframes bwSlideIn { from{opacity:0;transform:translateY(-15px);} to{opacity:1;transform:translateY(0);} }
+/* Animated subtitle line */
+.bw-sub { font-family:'Press Start 2P',monospace; font-size:8px; letter-spacing:2px; color:rgba(255,215,0,0.5); margin-bottom:18px; opacity:0; animation:bwSlideIn 0.4s 0.5s ease-out forwards; }
+.bw-overlay.mega-tier .bw-sub { color:rgba(255,68,255,0.5); }
+/* Credits value — gold to match BIG WIN title */
+.bw-val-wrap { display:flex; align-items:center; gap:6px; opacity:0; animation:bwValPop 0.5s 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards; }
+@keyframes bwValPop { 0%{opacity:0;transform:scale(0.5);} 60%{opacity:1;transform:scale(1.15);} 100%{opacity:1;transform:scale(1);} }
+.bw-plus { font-family:'Press Start 2P',monospace; font-size:20px; color:#ffd700; text-shadow:0 0 15px rgba(255,215,0,0.7); }
+.bw-val { font-family:'Press Start 2P',monospace; font-size:28px; color:#ffd700; background:rgba(0,0,0,0.55); padding:10px 22px; border:2px solid rgba(255,215,0,0.45); border-radius:6px; text-shadow:0 0 20px rgba(255,215,0,0.7), 2px 2px 0 #553300; box-shadow:0 0 25px rgba(255,215,0,0.12), inset 0 0 15px rgba(255,215,0,0.04); }
+.bw-overlay.mega-tier .bw-plus { color:#ff66ff; text-shadow:0 0 15px rgba(255,68,255,0.7); }
+.bw-overlay.mega-tier .bw-val { color:#ff66ff; border-color:rgba(255,68,255,0.45); text-shadow:0 0 20px rgba(255,68,255,0.7), 2px 2px 0 #330033; box-shadow:0 0 25px rgba(255,68,255,0.12), inset 0 0 15px rgba(255,68,255,0.04); }
+/* Dismiss hint */
+.bw-dismiss { font-family:'Press Start 2P',monospace; font-size:7px; color:rgba(255,255,255,0.25); letter-spacing:2px; margin-top:28px; opacity:0; animation:bwFadeIn 0.5s 2.5s ease-out forwards, bwPulseHint 2s 3s ease-in-out infinite alternate; }
+@keyframes bwFadeIn { from{opacity:0;} to{opacity:1;} }
+@keyframes bwPulseHint { 0%{opacity:0.25;} 100%{opacity:0.55;} }
+/* Title breathing glow (applied after pop) */
+.bw-title.breathing { animation:bwBreath 2s ease-in-out infinite alternate; }
+@keyframes bwBreath { 0%{transform:scale(1); text-shadow:0 0 30px rgba(255,215,0,0.8), 0 0 60px rgba(255,165,0,0.4), 4px 4px 0 #553300, -1px -1px 0 #ffeeaa;} 100%{transform:scale(1.06); text-shadow:0 0 50px rgba(255,215,0,1), 0 0 100px rgba(255,165,0,0.6), 5px 5px 0 #553300, -1px -1px 0 #ffeeaa;} }
+.bw-overlay.mega-tier .bw-title.breathing { animation:bwBreathMega 2s ease-in-out infinite alternate; }
+@keyframes bwBreathMega { 0%{transform:scale(1); text-shadow:0 0 30px rgba(255,68,255,0.8), 0 0 60px rgba(170,0,255,0.4), 4px 4px 0 #440044, -1px -1px 0 #ffaaff;} 100%{transform:scale(1.06); text-shadow:0 0 50px rgba(255,68,255,1), 0 0 100px rgba(170,0,255,0.6), 5px 5px 0 #440044, -1px -1px 0 #ffaaff;} }
 /* ─── CANVAS PARTICLES ─────────────────── */
 canvas#particleCanvas { position:fixed; inset:0; z-index:900; pointer-events:none; }
 canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
@@ -317,7 +360,6 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
 <body>
 <nav>
   <a href="index.html">Home</a>
-  <a href="gg33_mini_reading_app.html">Reading</a>
   <a href="archive.html">Archive</a>
   <a href="slot.html" class="active">Game</a>
   <a href="about.html">About</a>
@@ -376,6 +418,8 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
          </button>
          <button class="btn-unlock" id="soundToggle" onclick="toggleSound()" style="margin:0; width:auto; padding: 6px 10px; font-size: 7px;">SFX</button>
          <button class="btn-unlock" id="musicToggle" onclick="toggleMusic()" style="margin:0; width:auto; padding: 6px 10px; font-size: 7px;">MUSIC</button>
+         <button onclick="const ta = 50000; credits += ta; updateUI(); triggerBigWinScreen('bigWin', ta, null);" style="margin:0; padding: 6px 8px; font-size: 6px; font-family:'Press Start 2P',monospace; background:rgba(255,215,0,0.15); border:1px solid rgba(255,215,0,0.3); color:rgba(255,215,0,0.5); cursor:pointer; border-radius:3px;" title="Test Big Win overlay">TEST WIN</button>
+         <button onclick="localStorage.clear(); indexedDB.deleteDatabase('GG33SlotDB'); location.reload();" style="margin:0; padding: 6px 8px; font-size: 6px; font-family:'Press Start 2P',monospace; background:rgba(255,68,68,0.15); border:1px solid rgba(255,68,68,0.3); color:rgba(255,68,68,0.5); cursor:pointer; border-radius:3px;" title="Wipe local save data">WIPE SAVE</button>
        </div>
     </div>
   </div>
@@ -385,7 +429,6 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
       <div class="sp-label">LIFETIME SPINS</div>
       <div class="sp-val" id="spinsVal">0</div>
     </div>
-    <div class="sp-lock" id="jackpotLock">Jackpot in 10,000 spins</div>
   </div>
 
   <div class="genesis-p-wrap" id="genesisProgressWrap">
@@ -399,9 +442,9 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
   </div>
 
   <div class="ach-panel">
-    <div class="ach-title">LIFE PATH DISCOVERIES</div>
+    <div class="ach-title">LIFE PATH STORE</div>
     <div class="ach-grid" id="achGrid"></div>
-    <div class="ach-progress" id="achProgress">0 / 11 Discovered — Spin to unlock numbers</div>
+    <div class="ach-progress" id="achProgress">0 / 11 Unlocked — Tap any number to purchase</div>
   </div>
 
   <div class="shop-panel">
@@ -436,6 +479,17 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
     <div class="pay-row"><span>ALIGNMENT (Any Triple)</span><span>33x</span></div>
     <div class="pay-row"><span>DESTINY (Pair + Lucky #)</span><span>11x</span></div>
     <div class="pay-row"><span>SYNC (Left-to-Right Pair)</span><span>3x</span></div>
+  </div>
+
+  <div class="seo-content" style="background:var(--panel); border:1px solid rgba(255,165,0,0.2); border-radius:8px; padding:20px; margin-top:20px; text-align:left;">
+    <h2 style="font-family:'Cinzel',serif; font-size:14px; color:var(--gold); margin-bottom:12px; letter-spacing:1px; border-bottom:1px solid rgba(255,165,0,0.15); padding-bottom:8px;">The GG33 Numerology System</h2>
+    <p style="font-family:Arial,sans-serif; font-size:12px; color:#bbb; line-height:1.6; margin-bottom:14px;">Welcome to the GG33 interactive life path machine, the most accurate way to discover and understand your core numerical vibration. Created by Gary "The Numbers Guy" Grinberg, the GG33 system utilizes your full birth date to generate one of 11 distinct Life Path numbers. Unlike other simplistic calculators, this interactive tool forces you to explore the energy signatures associated with each number by unlocking them manually, turning self-discovery into an engaging journey.</p>
+    
+    <h3 style="font-family:'Cinzel',serif; font-size:12px; color:var(--gold2); margin-bottom:8px; letter-spacing:1px;">How to Calculate Your Life Path</h3>
+    <p style="font-family:Arial,sans-serif; font-size:12px; color:#bbb; line-height:1.6; margin-bottom:14px;">Your Life Path number comes from your full birth date (month, day, and year). In the GG33 framework, calculate it by adding every single digit of your birth date together individually until you reduce it down to a single digit—unless your final sum equals 11, 22, or 33. These are known as Master Numbers and are highly coveted within the academy, bringing intense energetic responsibilities to those who bear them.</p>
+
+    <h3 style="font-family:'Cinzel',serif; font-size:12px; color:var(--gold2); margin-bottom:8px; letter-spacing:1px;">Understanding The Interactive Mechanics</h3>
+    <p style="font-family:Arial,sans-serif; font-size:12px; color:#bbb; line-height:1.6; margin-bottom:14px;">The simulation above is not just a slot machine; it is a teaching tool designed to mimic the volatility and hidden alignments of numerology. Entering your birthday calculates your Life Path and turns it into your "Lucky Number" for the session. As you spin the reels, your goal is to accumulate enough credits to access the esoteric knowledge hidden in the Vault below. Unlocking all 11 paths allows you to understand the full spectrum of Human dynamics—from the independent leadership of the 1 to the visionary teachings of the Master 33.</p>
   </div>
 
   <div class="cta-strip">
@@ -488,6 +542,37 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
   </div>
 </div>
 
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box pixel-border" style="max-height: 80vh; overflow-y: auto;">
+    <div style="text-align: center; margin-bottom: 12px; border-bottom: 2px solid var(--gold); padding-bottom: 8px;">
+      <div id="cNum" class="d-num" style="font-size:32px; background:transparent;">--</div>
+      <div class="d-title" id="cTitle" style="color:var(--gold); margin-top:8px;">UNLOCK LIFE PATH</div>
+    </div>
+    <div style="font-size:12px; color:#aaa; text-align:center; margin-bottom:20px; line-height:1.5;">
+      Unlock Life Path <span id="cNumLabel" style="color:var(--gold);">--</span> for <span id="cCostLabel" style="color:var(--green);">--</span> credits?
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-modal" id="cCancel" onclick="cancelPurchase()" style="background:#444; color:#aaa;">CANCEL</button>
+      <button class="btn-modal" id="cBuy" onclick="processPurchase()" style="border-color:var(--green); color:var(--green);">PURCHASE</button>
+    </div>
+  </div>
+</div>
+
+<div class="bw-overlay" id="bwOverlay">
+  <div class="bw-rays" id="bwRays"></div>
+  <canvas class="bw-coins" id="bwCoins"></canvas>
+  <div class="bw-content">
+    <div class="bw-label" id="bwLabel">★ ★ ★</div>
+    <div class="bw-title" id="bwTitle">BIG<br>WIN!</div>
+    <div class="bw-sub" id="bwSub">ALIGNMENT BONUS</div>
+    <div class="bw-val-wrap">
+      <span class="bw-plus">+</span>
+      <div class="bw-val" id="bwVal">0</div>
+    </div>
+    <div class="bw-dismiss">TAP TO CONTINUE</div>
+  </div>
+</div>
+
 <script>
 
 const SECRET='GG33THENUMBERSGUY1717';
@@ -508,16 +593,16 @@ const COLORS={1:'n1',3:'n3',4:'n4',5:'n5',6:'n6',7:'n7',8:'n8',9:'n9',11:'n11',2
 const ICONS={}; // Achievement grid icons (sprites render via canvas, no SVG icons needed)
 const MULTIPLIERS = {
     'jackpot': 3333,
-    'master_triple': 333,
-    'wealth_triple': 88,
-    'knowledge_triple': 77,
-    'triple': 33,
-    'luckyPair': 11,
-    'pair': 3,
+    'master_triple': 222,
+    'wealth_triple': 66,
+    'knowledge_triple': 55,
+    'triple': 25,
+    'luckyPair': 8,
+    'pair': 2,
     'master_single': 0
 };
 const STRIP_WEIGHTS = {
-    '1': 5, '3': 5, '4': 5, '5': 5, '6': 5, '9': 5,
+    '1': 8, '3': 8, '4': 8, '5': 8, '6': 8, '9': 8,
     '7': 4, '8': 4,
     '11': 2, '22': 2,
     '33': 1
@@ -541,10 +626,10 @@ let spritesReady = false;
 spriteSheetImg.onload = function() {
   spritesReady = true;
   if(typeof buildReel === 'function') {
-    document.querySelectorAll('.reel-col').forEach(col => {
-      col.innerHTML = '';
-      buildReel(col);
-    });
+    initReels();
+  }
+  if(typeof updateAch === 'function') {
+    updateAch();
   }
 };
 spriteSheetImg.src = 'data:image/png;base64,' + SPRITE_SHEET_B64;
@@ -594,7 +679,7 @@ const KNOW={
 };
 
 // ─── STATE & PERSISTENCE ──────────────────────────
-let credits=10000,bet=500,spinning=false,lpNum=null,luckyNum=null,bdRaw=null;
+let credits=500000,bet=500,spinning=false,lpNum=null,luckyNum=null,bdRaw=null;
 let reelGrid = [[],[],[]];
 let discovered=new Set();
 let lifetimeSpins=0;
@@ -632,7 +717,7 @@ const Persistence = {
         if (!data) data = await this.loadFromDB();
         
         if (data) {
-            credits = data.credits ?? 10000;
+            credits = data.credits ?? 500000;
             discovered = new Set(data.discovered || []);
             lifetimeSpins = data.spins ?? 0;
             ownedSkins = data.skins || ['classic'];
@@ -1072,18 +1157,12 @@ function spin(forceJP){
       document.querySelectorAll('.reel-wrap')[2].classList.remove('anticipation');
     } catch(ex){}
     tempo = 120; // Reset tempo
-    spinning=false;
-    document.getElementById('spinBtn').disabled=false;
-    document.getElementById('scSpinBtn').disabled=false;
+    // spinBtn re-enabled inside processWin or triggerJP to prevent interactions during Big Win
     try {
       // Discover from all visible symbols (3x3 grid)
       const allSyms = reelGrid.flat();
-      const newDisc=allSyms.filter(n=>!discovered.has(n));
-      newDisc.forEach(n=>discovered.add(n));
-      if(newDisc.length>0) Persistence.save();
-      updateAch(newDisc);
       if(jpHit){triggerJP(forceJP===true);}
-      else{processWin(results);if(newDisc.length>0){setTimeout(()=>showDiscov(newDisc[0]),600);}}
+      else{processWin(results);}
     } catch(ex){ console.error('Spin result processing error:', ex); setMsg('SPIN COMPLETE',false); }
   },totalDelay);
 }
@@ -1371,6 +1450,14 @@ function processWin(res){
     if(winStreak>=GAME_FEEL.streakMin)showStreak();
   }
   
+  const finalizeSpin = () => {
+    updateUI();
+    Persistence.save();
+    spinning=false;
+    document.getElementById('spinBtn').disabled=false;
+    document.getElementById('scSpinBtn').disabled=false;
+  };
+
   // Update message
   if(totalWin > 0){
     if(winningLines.length > 1){
@@ -1378,12 +1465,17 @@ function processWin(res){
     } else {
       setMsg(bestMsg, bestIsMaster, isJP);
     }
+    
+    if (bestTier === 'bigWin' || bestTier === 'master' || bestTier === 'jackpot') {
+      setTimeout(() => triggerBigWinScreen(bestTier, totalWin, finalizeSpin), 1200);
+    } else {
+      finalizeSpin();
+    }
   } else {
+    winStreak = 0;
     setMsg('NO ALIGNMENT', false, false);
+    finalizeSpin();
   }
-  
-  updateUI();
-  Persistence.save();
 }
 
 // ─── CANVAS PARTICLE SYSTEM (Optimized) ───────────
@@ -1466,6 +1558,189 @@ function emitPixelBurst(cx,cy,count,num,motion='burst'){
     }
     p.init(cfg);
   }
+}
+
+// ─── BIG WIN COIN PARTICLE SYSTEM ──────────────
+let bwCoinAnim = null;
+function startBigWinCoins(isMega) {
+    const canvas = document.getElementById('bwCoins');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const coins = [];
+    const COIN_CHARS = isMega ? ['✦','★','◆','♦','✧'] : ['●','◆','★','✦','▲'];
+    const COIN_COLORS = isMega 
+        ? ['#ff66ff','#ff99ff','#cc44ff','#ffaaff','#aa00ff'] 
+        : ['#ffd700','#ffaa00','#ffcc44','#fff4aa','#ff8c00'];
+    
+    function spawnCoin() {
+        coins.push({
+            x: Math.random() * canvas.width,
+            y: -20 - Math.random() * 60,
+            vx: (Math.random() - 0.5) * 3,
+            vy: Math.random() * 3 + 1.5,
+            rot: Math.random() * 360,
+            rotV: (Math.random() - 0.5) * 8,
+            size: Math.random() * 12 + 8,
+            char: COIN_CHARS[Math.floor(Math.random() * COIN_CHARS.length)],
+            color: COIN_COLORS[Math.floor(Math.random() * COIN_COLORS.length)],
+            alpha: 0.7 + Math.random() * 0.3,
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: Math.random() * 0.04 + 0.02
+        });
+    }
+    
+    let frameCount = 0;
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        frameCount++;
+        // Spawn coins
+        if(frameCount % 2 === 0 && coins.length < 80) spawnCoin();
+        
+        for(let i = coins.length - 1; i >= 0; i--) {
+            const c = coins[i];
+            c.x += c.vx + Math.sin(c.wobble) * 0.8;
+            c.y += c.vy;
+            c.vy += 0.03; // gentle gravity
+            c.rot += c.rotV;
+            c.wobble += c.wobbleSpeed;
+            
+            if(c.y > canvas.height + 30) { coins.splice(i, 1); continue; }
+            
+            ctx.save();
+            ctx.globalAlpha = c.alpha;
+            ctx.translate(c.x, c.y);
+            ctx.rotate(c.rot * Math.PI / 180);
+            ctx.font = c.size + 'px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            // Glow effect
+            ctx.shadowColor = c.color;
+            ctx.shadowBlur = 8;
+            ctx.fillStyle = c.color;
+            ctx.fillText(c.char, 0, 0);
+            ctx.restore();
+        }
+        bwCoinAnim = requestAnimationFrame(animate);
+    }
+    animate();
+}
+
+function stopBigWinCoins() {
+    if(bwCoinAnim) { cancelAnimationFrame(bwCoinAnim); bwCoinAnim = null; }
+    const canvas = document.getElementById('bwCoins');
+    if(canvas) { const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+}
+
+function triggerBigWinScreen(tier, amt, onComplete) {
+    const overlay = document.getElementById('bwOverlay');
+    const title = document.getElementById('bwTitle');
+    const label = document.getElementById('bwLabel');
+    const sub = document.getElementById('bwSub');
+    const valObj = document.getElementById('bwVal');
+    const rays = document.getElementById('bwRays');
+    
+    const isMega = (tier === 'jackpot' || tier === 'master');
+    
+    // Configure visuals based on tier
+    overlay.classList.remove('mega-tier');
+    if(isMega) {
+        overlay.classList.add('mega-tier');
+        title.innerHTML = 'MEGA<br>WIN!';
+        label.textContent = '★ ★ ★ ★ ★';
+        sub.textContent = 'MASTER ALIGNMENT';
+    } else {
+        title.innerHTML = 'BIG<br>WIN!';
+        label.textContent = '★ ★ ★';
+        sub.textContent = 'ALIGNMENT BONUS';
+    }
+    
+    // Reset animations by forcing reflow on animated elements
+    title.classList.remove('breathing');
+    const animatedEls = overlay.querySelectorAll('.bw-label, .bw-title, .bw-sub, .bw-val-wrap, .bw-dismiss');
+    animatedEls.forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight; // force reflow
+        el.style.animation = '';
+    });
+    
+    // Build light rays
+    rays.innerHTML = '';
+    const numRays = isMega ? 16 : 10;
+    for(let i = 0; i < numRays; i++) {
+        const ray = document.createElement('div');
+        ray.className = 'bw-ray';
+        const angle = (360 / numRays) * i;
+        ray.style.setProperty('--ray-angle', angle + 'deg');
+        ray.style.animationDelay = (i * 0.05) + 's, ' + (i * 0.05) + 's';
+        ray.style.width = (isMega ? 5 : 3) + 'px';
+        rays.appendChild(ray);
+    }
+    
+    valObj.textContent = '0';
+    overlay.classList.add('show');
+    
+    // Start coin shower
+    startBigWinCoins(isMega);
+    
+    // Credit count-up with easing
+    let startTime = null;
+    const duration = 2200; // ms for count-up
+    
+    function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+    
+    function countUp(timestamp) {
+        if(!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeOutQuart(progress);
+        const current = Math.floor(amt * eased);
+        
+        valObj.textContent = current.toLocaleString();
+        
+        // Tick sound — only when sfx on, and only every 3 frames to avoid noise
+        if(sfxOn && progress < 1 && Math.random() < 0.33) {
+            const freq = 500 + (eased * 600);
+            try { playTone(freq, 0.03, 'triangle', 0.02); } catch(e){}
+        }
+        
+        if(progress < 1) {
+            requestAnimationFrame(countUp);
+        } else {
+            valObj.textContent = amt.toLocaleString();
+            // Final ding
+            if(sfxOn) { try { playTone(1200, 0.15, 'sine', 0.06); } catch(e){} }
+            // Start breathing animation on title
+            title.classList.add('breathing');
+        }
+    }
+    
+    // Small delay so the pop animation can play first
+    setTimeout(() => requestAnimationFrame(countUp), 600);
+    
+    // Dismiss handler
+    let dismissed = false;
+    const minShowTime = 3000; // Minimum time before tap-to-dismiss works
+    const showStart = Date.now();
+    
+    function dismissBigWin() {
+        if(dismissed) return;
+        if(Date.now() - showStart < minShowTime) return; // Too early
+        dismissed = true;
+        overlay.removeEventListener('click', dismissBigWin);
+        overlay.classList.remove('show');
+        overlay.classList.remove('mega-tier');
+        stopBigWinCoins();
+        title.classList.remove('breathing');
+        if(onComplete) onComplete();
+    }
+    
+    overlay.addEventListener('click', dismissBigWin);
+    
+    // Auto-dismiss after 8 seconds if not tapped
+    setTimeout(() => { dismissBigWin(); }, 8000);
 }
 
 function fireEffect(tier, results=[]){
@@ -1632,6 +1907,50 @@ function showDiscov(num){
 }
 function closeDiscov(){document.getElementById('discovModal').classList.remove('show');}
 
+let pendingUnlock = null;
+function attemptUnlock(num) {
+    if(spinning) return;
+    const isMaster = MASTERS.includes(num);
+    const cost = isMaster ? 50000 : 15000;
+    
+    if(credits < cost) {
+        setMsg(`NEED ${cost} CREDITS TO UNLOCK LP ${num}`, false);
+        return;
+    }
+    
+    pendingUnlock = { num, cost };
+    const numEl = document.getElementById('cNum');
+    numEl.textContent = num;
+    numEl.className = `d-num ${COLORS[num] || ''}`;
+    document.getElementById('cNumLabel').textContent = num;
+    document.getElementById('cCostLabel').textContent = cost.toLocaleString();
+    
+    const m = document.getElementById('confirmModal');
+    m.classList.add('show');
+}
+
+function processPurchase() {
+    if(!pendingUnlock) return;
+    const { num, cost } = pendingUnlock;
+    
+    if(credits >= cost) {
+        credits -= cost;
+        discovered.add(num);
+        Persistence.save();
+        updateUI();
+        updateAch([num]);
+
+        document.getElementById('confirmModal').classList.remove('show');
+        showDiscov(num);
+    }
+    pendingUnlock = null;
+}
+
+function cancelPurchase() {
+    pendingUnlock = null;
+    document.getElementById('confirmModal').classList.remove('show');
+}
+
 // ─── ACHIEVEMENTS ─────────────────────────────────
 function updateAch(newlyDiscovered=[]){
   const grid=document.getElementById('achGrid');grid.innerHTML='';
@@ -1640,13 +1959,24 @@ function updateAch(newlyDiscovered=[]){
     const isNew=newlyDiscovered.includes(n);
     const div=document.createElement('div');
     div.className=`ach-item${isMaster?' mach':''}${isUnlocked?' unlocked':' locked'}${isNew?' just-unlocked':''}`;
-    const icon=ICONS[n]||'';
-    const iconSmall=icon.replace(/width="48" height="48"/,'width="28" height="28"');
-    div.innerHTML=`${isUnlocked?iconSmall:''}<div class="ach-num ${COLORS[n]||''}">${n}</div><div class="ach-lbl">${LABELS[n]||''}</div>${!isUnlocked?'<div class="ach-lock-icon">🔒</div>':''}`;
-    if(isUnlocked)div.onclick=()=>showDiscov(n);
+    let canvasHtml = '';
+    const canvas = getSpriteCanvas(n);
+    if(canvas && isUnlocked) {
+      canvasHtml = `<img src="${canvas.toDataURL()}" style="width:28px; height:28px; image-rendering:pixelated; margin-bottom:4px;">`;
+    }
+    
+    const cost = MASTERS.includes(n) ? 50000 : 15000;
+    const costLabel = MASTERS.includes(n) ? '👑 50K' : '🔒 15K';
+    const lockEl = !isUnlocked ? `<button class="skin-btn" style="margin-top:6px; border-color:var(--green); color:var(--green); width:90%; padding:4px 0; font-size:6.5px;" onclick="event.stopPropagation(); attemptUnlock(${n});">BUY<br><span style="font-size:5px">${costLabel}</span></button>` : '';
+    div.innerHTML = canvasHtml + '<div class="ach-num ' + (COLORS[n]||'') + '">' + n + '</div><div class="ach-lbl">' + (LABELS[n]||'') + '</div>' + lockEl;
+    if(isUnlocked){
+      div.onclick=()=>showDiscov(n);
+    } else {
+      div.onclick=()=>attemptUnlock(n);
+    }
     grid.appendChild(div);
   });
-  document.getElementById('achProgress').textContent=`${discovered.size} / 11 Discovered — Tap unlocked numbers to review`;
+  document.getElementById('achProgress').textContent=`${discovered.size} / 11 Unlocked — Tap locked numbers to purchase`;
   
   // Update Genesis Progress
   const percent = Math.round((discovered.size / 11) * 100);
@@ -1710,9 +2040,6 @@ function setMsg(msg,isMaster,isJP){
 }
 function updateSpinsDisplay(){
   document.getElementById('spinsVal').textContent=lifetimeSpins.toLocaleString();
-  const lock=document.getElementById('jackpotLock');
-  if(lifetimeSpins>=10000){lock.textContent='★ Jackpot Unlocked ★';lock.style.color='var(--gold)';}
-  else{lock.textContent=`Jackpot in ${(10000-lifetimeSpins).toLocaleString()} spins`;}
 }
 function launchParticles(emoji,count){
   for(let i=0;i<count;i++){
@@ -1977,6 +2304,7 @@ window.onload = async () => {
     await Persistence.load();
     initReels();
     updateUI();
+    updateAch();
     updateSpinsDisplay();
     renderSkinShop();
     
