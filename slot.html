@@ -419,8 +419,6 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
          </button>
          <button class="btn-unlock" id="soundToggle" onclick="toggleSound()" style="margin:0; width:auto; padding: 6px 10px; font-size: 7px;">SFX</button>
          <button class="btn-unlock" id="musicToggle" onclick="toggleMusic()" style="margin:0; width:auto; padding: 6px 10px; font-size: 7px;">MUSIC</button>
-         <button onclick="const ta = 50000; credits += ta; updateUI(); triggerBigWinScreen('bigWin', ta, null);" style="margin:0; padding: 6px 8px; font-size: 6px; font-family:'Press Start 2P',monospace; background:rgba(255,215,0,0.15); border:1px solid rgba(255,215,0,0.3); color:rgba(255,215,0,0.5); cursor:pointer; border-radius:3px;" title="Test Big Win overlay">TEST WIN</button>
-         <button onclick="localStorage.clear(); indexedDB.deleteDatabase('GG33SlotDB'); location.reload();" style="margin:0; padding: 6px 8px; font-size: 6px; font-family:'Press Start 2P',monospace; background:rgba(255,68,68,0.15); border:1px solid rgba(255,68,68,0.3); color:rgba(255,68,68,0.5); cursor:pointer; border-radius:3px;" title="Wipe local save data">WIPE SAVE</button>
        </div>
     </div>
   </div>
@@ -526,7 +524,7 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
     <div class="jp-code-lbl">SOUL VERIFICATION CODE</div>
     <div class="jp-code" id="jpCode">--------</div>
     <div class="jp-info" id="jpInfo">Fetching record...</div>
-    <div class="jp-claim">Screenshot this code and DM it to @GG33Academy for your prize</div>
+    <div class="jp-claim">Screenshot this code and email it to garrygrinberg@gg33academy.org for your prize</div>
     <button class="btn-copy" onclick="copyCode()">COPY CODE</button>
     <button class="btn-close-jp" onclick="closeJP()">CONTINUE SPINNING</button>
   </div>
