@@ -156,6 +156,8 @@ nav a:hover,nav a.active{color:var(--gold);}
 @keyframes jk{from{transform:scale(1);}to{transform:scale(1.04);}}
 @keyframes flashW{0%,100%{background:var(--dark);}50%{background:rgba(255,165,0,0.12);}}
 .flash{animation:flashW .4s ease-in-out 3;}
+@keyframes shakeError{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-10px);}40%,80%{transform:translateX(10px);}}
+.shake-error{animation:shakeError .4s cubic-bezier(.36,.07,.19,.97) both; border: 2px solid #ff4444 !important;}
 
 /* Controls */
 .controls{padding:14px;display:flex;gap:8px;background:var(--panel2);border-top:2px solid var(--gold);}
@@ -1000,18 +1002,29 @@ function unlockLP(){
   initAudio();
   bdRaw=`${String(m).padStart(2,'0')}/${String(d).padStart(2,'0')}/${y}`;
   lpNum=calcLP(m,d,y);
-  let ln=parseInt(String(m)[0])+parseInt(String(y)[String(y).length-1]);
-  while(ln>9&&![11,22,33].includes(ln))ln=ds(ln);
-  if(ln===2)ln=11;
-  luckyNum=ln;
+  
+  // Custom Lucky Number Math: First digit of month + Last non-zero digit of year
+  let firstM = String(m)[0];
+  let strY = String(y);
+  let lastY = '';
+  for(let i=strY.length-1; i>=0; i--){
+      if(strY[i] !== '0'){ lastY = strY[i]; break; }
+  }
+  let displayLucky = firstM + lastY; // The "99" style string
+  
+  let slotLucky = reduce(parseInt(displayLucky));
+  while(slotLucky > 9) { slotLucky = ds(slotLucky); } // enforce true single digit for slot
+  luckyNum=slotLucky;
+  
   const badge=document.getElementById('lpBadge');
   badge.style.display='block';
-  badge.innerHTML=`Life Path: ${lpNum} &nbsp;&#9733;&nbsp; Lucky Number: ${luckyNum}`;
-  document.getElementById('spinBtn').disabled=false;
-  document.getElementById('scSpinBtn').disabled=false;
+  badge.innerHTML=`Life Path: <span style="color:#fff;">${lpNum}</span> &nbsp;&#9733;&nbsp; Lucky Number: <span style="color:#fff;">${displayLucky}</span>`;
+  
   document.getElementById('scLpWrap').style.display='flex';
-  document.getElementById('scLP').textContent=lpNum;
-  setMsg(`LP ${lpNum} ACTIVATED — LUCKY: ${luckyNum}`,false);
+  document.getElementById('scLpWrap').innerHTML=`<span class="sc-label" style="margin-right:4px;">LP: <span style="color:var(--gold2)">${lpNum}</span></span> <span class="sc-label" style="font-size:7px;opacity:0.8;">L: <span style="color:var(--gold2)">${displayLucky}</span></span>`;
+  
+  document.querySelector('.bd-panel').classList.remove('shake-error');
+  setMsg(`LP ${lpNum} ACTIVATED — LUCKY: ${displayLucky}`,false);
   sfxDiscov();
 }
 
@@ -1051,6 +1064,16 @@ function initReels(){buildReel('reel0');buildReel('reel1');buildReel('reel2');}
 function spin(forceJP){
   initAudio();
   if(spinning)return;
+  
+  if(!luckyNum && !forceJP) {
+      setMsg('ENTER BIRTHDAY TO UNLOCK', false, false);
+      const bdPanel = document.querySelector('.bd-panel');
+      bdPanel.classList.remove('shake-error');
+      void bdPanel.offsetWidth; // trigger reflow
+      bdPanel.classList.add('shake-error');
+      try { playTone(150, 0.2, 'square', 0.1); } catch(e){} // buzzer
+      return;
+  }
   
   // Anti-bot: enforce cooldown
   const now = Date.now();
