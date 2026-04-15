@@ -735,7 +735,8 @@ const Persistence = {
             lastSpin: lastSpinTime,
             music: musicOn,
             sfx: sfxOn,
-            turbo: turboOn
+            turbo: turboOn,
+            bdRaw: bdRaw
         };
         localStorage.setItem('gg33_v2_state', JSON.stringify(state));
         this.saveToDB(state);
@@ -757,6 +758,32 @@ const Persistence = {
             musicOn = data.music ?? true;
             sfxOn = data.sfx ?? true;
             turboOn = data.turbo ?? false;
+            
+            if (data.bdRaw) {
+                bdRaw = data.bdRaw;
+                const bdInp = document.getElementById('bdInput');
+                if(bdInp) bdInp.value = bdRaw;
+                
+                const p = parseBD(bdRaw);
+                if(p) {
+                    const {m,d,y} = p;
+                    lpNum = calcLP(m,d,y);
+                    let firstM = String(m)[0];
+                    let strY = String(y);
+                    let lastY = '';
+                    for(let i=strY.length-1; i>=0; i--){ if(strY[i] !== '0'){ lastY = strY[i]; break; } }
+                    let displayLucky = firstM + lastY;
+                    let slotLucky = reduce(parseInt(displayLucky));
+                    while(slotLucky > 9) { slotLucky = ds(slotLucky); }
+                    luckyNum=slotLucky;
+                    
+                    const badge=document.getElementById('lpBadge');
+                    badge.style.display='block';
+                    badge.innerHTML=`Life Path: <span style="color:#fff;">${lpNum}</span> &nbsp;&#9733;&nbsp; Lucky Number: <span style="color:#fff;">${displayLucky}</span>`;
+                    document.getElementById('scLpWrap').style.display='flex';
+                    document.getElementById('scLpWrap').innerHTML=`<span class="sc-label" style="margin-right:4px;">LP: <span style="color:var(--gold2)">${lpNum}</span></span> <span class="sc-label" style="font-size:7px;opacity:0.8;">L: <span style="color:var(--gold2)">${displayLucky}</span></span>`;
+                }
+            }
             
             // Apply decay: -1 reading count per 24 hours
             if (lastReadingTime > 0) {
@@ -1025,6 +1052,7 @@ function unlockLP(){
   
   document.querySelector('.bd-panel').classList.remove('shake-error');
   setMsg(`LP ${lpNum} ACTIVATED — LUCKY: ${displayLucky}`,false);
+  Persistence.save();
   sfxDiscov();
 }
 
@@ -1456,7 +1484,7 @@ function processWin(res){
     winStreak++;
     
     // Streak Bonus Multiplier
-    const streakMult = Math.min(5, 1 + ((winStreak - 1) * 0.5)); // max 5x
+    const streakMult = Math.min(5, winStreak); // max 5x whole integers
     const streakBonus = Math.floor(totalWin * (streakMult - 1));
     totalWin += streakBonus;
     
