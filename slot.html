@@ -269,8 +269,8 @@ nav a:hover,nav a.active{color:var(--gold);}
 @keyframes bigWinPulse{0%{opacity:0;transform:scale(0.8);}30%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(1.3);}}
 
 /* Win streak badge */
-.streak-badge{display:none;position:fixed;top:60px;right:10px;z-index:800;background:linear-gradient(135deg,#cc6600,#ffa500);color:#000;font-family:'Press Start 2P',monospace;font-size:6px;padding:6px 10px;border-radius:4px;box-shadow:0 0 15px rgba(255,165,0,0.6);animation:streakPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275);}
-@keyframes streakPop{0%{transform:scale(0) translateX(50px);opacity:0;}100%{transform:scale(1) translateX(0);opacity:1;}}
+.streak-badge{display:none;position:absolute;top:30%;left:50%;z-index:800;background:linear-gradient(135deg,#ff4400,#ffaa00);color:#fff;font-family:'Press Start 2P',monospace;font-size:16px;padding:12px 20px;border-radius:6px;box-shadow:0 0 40px rgba(255,100,0,0.8);border:2px solid #fff;pointer-events:none;animation:streakPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;}
+@keyframes streakPop{0%{transform:translate(-50%,-50%) scale(0);opacity:0;}100%{transform:translate(-50%,-50%) scale(1);opacity:1;}}
 
 .audio-btn.off{opacity:0.4;filter:grayscale(1);}
 .btn-unlock.off { opacity: 0.35; filter: grayscale(1); text-decoration: line-through; }
@@ -1402,9 +1402,15 @@ function processWin(res){
   
   if(totalWin > 0){
     winStreak++;
+    
+    // Streak Bonus Multiplier
+    const streakMult = Math.min(5, 1 + ((winStreak - 1) * 0.5)); // max 5x
+    const streakBonus = Math.floor(totalWin * (streakMult - 1));
+    totalWin += streakBonus;
+    
     credits += totalWin;
     const wv=document.getElementById('winVal');
-    wv.textContent=`+${totalWin}`;
+    wv.innerHTML=`+${totalWin}${winStreak > 1 ? `<br><span style="font-size:8px;color:#ffaa00;">(${streakMult}x STREAK!)</span>` : ''}`;
     wv.classList.remove('bounce');void wv.offsetWidth;wv.classList.add('bounce');
     const wa=document.querySelector('.win-area');
     wa.classList.remove('flash');void wa.offsetWidth;wa.classList.add('flash');
@@ -1713,9 +1719,6 @@ function triggerBigWinScreen(tier, amt, onComplete) {
     }
     
     overlay.addEventListener('click', dismissBigWin);
-    
-    // Auto-dismiss after 8 seconds if not tapped
-    setTimeout(() => { dismissBigWin(); }, 8000);
 }
 
 function fireEffect(tier, results=[]){
@@ -2056,8 +2059,15 @@ function updateUI(){
 }
 function changeBet(d){
   if(spinning)return;
+  const oldBet = bet;
   bet=Math.max(500,Math.min(credits,bet+d));
+  if(bet === oldBet) return;
   updateUI();
+  
+  if(sfxOn) {
+      if(d > 0) playTone(1200, 0.1, 'sine', 0.1);
+      else playTone(600, 0.1, 'sine', 0.1);
+  }
   
   // Visual feedback animation
   const betEl = document.getElementById('scBet');
