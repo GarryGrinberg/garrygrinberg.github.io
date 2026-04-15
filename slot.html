@@ -46,6 +46,7 @@ body.skin-bloodmoon{--gold:#ff4444;--gold2:#ff7777;--gold3:#ff9999;--bg:#1a0505;
 body.skin-emerald{--gold:#00dd88;--gold2:#44ffaa;--gold3:#88ffcc;--bg:#021a0e;--panel:#042416;--panel2:#063020;--glow:rgba(0,221,136,0.4);--glow2:rgba(0,221,136,0.15);--master:#44ffcc;--mg:rgba(68,255,204,0.5); --wheel-base:#010d07; --wheel-mid:#052614; --wheel-hi:#0a3d20;}
 body.skin-diamond{--gold:#77bbff;--gold2:#99ccff;--gold3:#bbddff;--bg:#050a18;--panel:#081024;--panel2:#0c1630;--glow:rgba(119,187,255,0.4);--glow2:rgba(119,187,255,0.15);--master:#aa88ff;--mg:rgba(170,136,255,0.5); --wheel-base:#02050c; --wheel-mid:#0a1733; --wheel-hi:#122855;}
 body.skin-obsidian{--gold:#cccccc;--gold2:#dddddd;--gold3:#ffffff;--bg:#080808;--panel:#111111;--panel2:#191919;--glow:rgba(200,200,200,0.3);--glow2:rgba(200,200,200,0.1);--master:#ffffff;--mg:rgba(255,255,255,0.3); --wheel-base:#040404; --wheel-mid:#151515; --wheel-hi:#222222;}
+body.skin-matrix{--gold:#00ff00;--gold2:#33ff33;--gold3:#66ff66;--bg:#000500;--panel:#001a00;--panel2:#003300;--glow:rgba(0,255,0,0.4);--glow2:rgba(0,255,0,0.15);--master:#ffffff;--mg:rgba(255,255,255,0.5); --wheel-base:#000a00; --wheel-mid:#002200; --wheel-hi:#004400;}
 /* ─── SHOP PANEL ───────────────────── */
 .shop-panel{background:var(--panel);border:1px solid rgba(255,165,0,0.2);border-radius:8px;padding:16px;margin-top:14px;}
 .shop-title{text-align:center;font-size:10px;letter-spacing:2px;color:var(--gold3);margin-bottom:12px;}
@@ -860,94 +861,41 @@ function sfxJackpot(){[523,659,784,1047,1318,1568].forEach((f,i)=>setTimeout(()=
 function sfxDiscov(){playTone(660,.15,'sine',0.1);setTimeout(()=>playTone(880,.2,'sine',0.1),120);}
 function vib(p=[50]){if(navigator.vibrate)navigator.vibrate(p);}
 
-// ─── MUSIC ENGINE (Chiptune) ─────────────────────
+// ─── BACKGROUND AUDIO (DYNAMIC WEATHER) ─────────────
 let musicOn = true;
 let sfxOn = true;
 let audioStarted = false;
-let musicInterval = null;
-let currentBar = 0;
-let currentNote = 0;
-let tempo = 120; // BPM
 
-// E Minor Pentatonic: E3, G3, A3, B3, D4, E4
-const SCALE = [164.81, 196.00, 220.00, 246.94, 293.66, 329.63];
-const MELODY = [
-    [0, 2, 4, 3], // Bar 1
-    [0, 2, 5, 4], // Bar 2
-    [0, 1, 3, 2], // Bar 3
-    [4, 3, 2, 0]  // Bar 4
-];
+const bgMusic = new Audio();
+bgMusic.loop = true;
+bgMusic.volume = 0.45;
+let isRaining = false;
 
-function playMusicNote(freq, dur, vol=0.03){
-  if(!musicOn) return;
-  const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-  o.type='triangle'; o.frequency.value=freq; g.gain.value=vol;
-  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-  o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+dur);
+async function initWeather() {
+  try {
+    // Silent IP-based Geolocate (No Prompt)
+    const geoRes = await fetch('https://get.geojs.io/v1/ip/geo.json');
+    if(!geoRes.ok) return;
+    const geo = await geoRes.json();
+    
+    // Fetch Weather from Open-Meteo
+    const wxRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geo.latitude}&longitude=${geo.longitude}&current_weather=true`);
+    if(!wxRes.ok) return;
+    const wx = await wxRes.json();
+    
+    // WMO Weather codes for drizzle/rain/showers/storms
+    const rainCodes = [51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99];
+    isRaining = rainCodes.includes(wx.current_weather.weathercode);
+    
+    console.log("Weather Active | Raining:", isRaining);
+  } catch(e) {
+    console.warn("Weather API unreachable. Defaulting to clear.", e);
+  }
 }
 
-
-const chiptune = {
-    playWin(tier) {
-        if (!sfxOn) return;
-        const freqs = [
-            [523.25, 659.25, 783.99], // C5, E5, G5
-            [659.25, 783.99, 1046.50], // E5, G5, C6
-            [783.99, 1046.50, 1318.51, 1567.98], // G5, C6, E6, G6
-            [1046.50, 1318.51, 1567.98, 2093.00], // C6, E6, G6, C7
-            [1318.51, 1567.98, 2093.00, 2637.02, 3135.96] // E6, G6, C7, E7, G7 (Jackpot)
-        ];
-        const loop = freqs[tier - 1] || freqs[0];
-        loop.forEach((f, i) => {
-            setTimeout(() => playMusicNote(f, 0.4, 0.1), i * 150);
-        });
-    },
-    playTension(speed) {
-        if (!sfxOn) return;
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.type = 'sawtooth';
-        o.frequency.setValueAtTime(220 + (speed * 110), audioCtx.currentTime);
-        o.frequency.exponentialRampToValueAtTime(880 + (speed * 220), audioCtx.currentTime + 0.1);
-        g.gain.setValueAtTime(0.05, audioCtx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-        o.connect(g);
-        g.connect(audioCtx.destination);
-        o.start();
-        o.stop(audioCtx.currentTime + 0.1);
-    },
-    playReelAnticipation(durationMs) {
-        if (!sfxOn) return;
-        const dur = durationMs / 1000;
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.type = 'triangle';
-        o.frequency.setValueAtTime(40, audioCtx.currentTime); 
-        o.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + dur);
-        g.gain.setValueAtTime(0.0, audioCtx.currentTime);
-        g.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + (dur * 0.8));
-        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-        o.connect(g);
-        g.connect(audioCtx.destination);
-        o.start();
-        o.stop(audioCtx.currentTime + dur);
-    }
-};
-
 function startMusic(){
-    if(musicInterval) return;
-    musicInterval = setInterval(() => {
-        if(!musicOn) return;
-        const bar = MELODY[currentBar];
-        const noteIdx = bar[currentNote];
-        playMusicNote(SCALE[noteIdx], 0.4);
-        
-        currentNote++;
-        if(currentNote >= 4){
-            currentNote = 0;
-            currentBar = (currentBar + 1) % MELODY.length;
-        }
-    }, (60000 / tempo) / 2); // 1/8 notes
+    bgMusic.src = isRaining ? 'SchoolDayRain.ogg' : 'SchoolDay.ogg';
+    if(musicOn) bgMusic.play().catch(e => console.log('Autoplay deferred'));
 }
 
 function toggleTurbo(){
@@ -955,7 +903,7 @@ function toggleTurbo(){
     document.getElementById('turboToggle').classList.toggle('active', turboOn);
     Persistence.save();
     setMsg(turboOn ? 'TURBO MODE ON' : 'TURBO MODE OFF', false);
-    chiptune.playTension(turboOn ? 2 : 1);
+    if(turboOn && sfxOn) playTension(1);
 }
 
 function toggleMusic(){
@@ -964,7 +912,10 @@ function toggleMusic(){
     localStorage.setItem('gg33_music', musicOn);
     if(musicOn){ 
         if(audioCtx.state==='suspended') audioCtx.resume();
-        startMusic();
+        if(bgMusic.src) bgMusic.play().catch(e=>console.log(e));
+        else startMusic();
+    } else {
+        bgMusic.pause();
     }
 }
 
@@ -1814,10 +1765,58 @@ function showWinLabel(txt){
     setTimeout(()=>el.style.transform='scale(1)', 400);
 }
 
+// ─── DIAGONAL MATRIX RAIN ─────────────────────────
+const rainDrops = [];
+const RAIN_CHARS = '1234567890'.split('');
+for(let i=0; i<150; i++) {
+   rainDrops.push({
+       x: Math.random() * window.innerWidth * 1.5 - (window.innerWidth*0.5), // wide spread for diagonal
+       y: Math.random() * window.innerHeight,
+       s: Math.random() * 8 + 4, // speed
+       size: Math.random() * 8 + 8, // text size
+       c: RAIN_CHARS[Math.floor(Math.random()*RAIN_CHARS.length)]
+   });
+}
+function drawMatrixRain(ctx, canvas) {
+   ctx.fillStyle = 'rgba(0,0,0,0.15)'; // trails
+   ctx.fillRect(0,0,canvas.width,canvas.height);
+   ctx.textAlign = 'center';
+   
+   ctx.shadowBlur = 5;
+   ctx.shadowColor = '#00ff44';
+   ctx.fillStyle = '#0f8'; // Bright green drops
+   
+   for(let i=0; i<rainDrops.length; i++){
+       const d = rainDrops[i];
+       ctx.font = d.size + 'px monospace';
+       ctx.fillText(d.c, d.x, d.y);
+       
+       // Diagonal movement: right and down
+       d.x += d.s * 0.3;
+       d.y += d.s;
+       
+       // Flashing chars occasionally
+       if(Math.random() < 0.05) d.c = RAIN_CHARS[Math.floor(Math.random()*RAIN_CHARS.length)];
+       
+       // Reset if falls off
+       if(d.y > canvas.height || d.x > canvas.width) {
+           d.y = -20;
+           d.x = Math.random() * window.innerWidth * 1.5 - (window.innerWidth*0.5);
+       }
+   }
+   ctx.shadowBlur = 0;
+}
+
 function animate(){
   const pCanvas = document.getElementById('particleCanvas');
   const pCtx = pCanvas.getContext('2d');
-  pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
+  
+  if(isRaining) {
+      drawMatrixRain(pCtx, pCanvas);
+  } else {
+      pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
+  }
+  
   for(const p of particles){if(!p.active)continue;p.update();p.draw(pCtx);}
   
   // BG Update for Matrix etc
@@ -2055,7 +2054,24 @@ function updateUI(){
   const btn = document.getElementById('btnFriend');
   if(btn) btn.disabled = (credits < cost);
 }
-function changeBet(d){if(spinning)return;bet=Math.max(500,Math.min(credits,bet+d));updateUI();}
+function changeBet(d){
+  if(spinning)return;
+  bet=Math.max(500,Math.min(credits,bet+d));
+  updateUI();
+  
+  // Visual feedback animation
+  const betEl = document.getElementById('scBet');
+  if(betEl) {
+    betEl.style.transition = 'none';
+    betEl.style.transform = d > 0 ? 'scale(1.4)' : 'scale(0.8)';
+    betEl.style.color = d > 0 ? '#44ff88' : '#ff4444';
+    setTimeout(() => {
+      betEl.style.transition = 'all 0.3s ease';
+      betEl.style.transform = 'scale(1)';
+      betEl.style.color = '';
+    }, 50);
+  }
+}
 function setMsg(msg,isMaster,isJP){
   const el=document.getElementById('winMsg');
   el.textContent=msg;el.className='win-msg';
@@ -2252,12 +2268,13 @@ function flashScreen(color,intensity){
 
 // ─── SKIN SHOP ────────────────────────────────────
 const SKIN_DEFS = [
-  {id:'classic',   name:'CLASSIC',   cost:0,    preview:'linear-gradient(135deg, #1a0a02, #2a1505)',  desc:'Default gold & dark'},
-  {id:'amethyst',  name:'AMETHYST',  cost:200,  preview:'linear-gradient(135deg, #0a0518, #2a1045)',  desc:'Purple mystic glow'},
-  {id:'bloodmoon', name:'BLOODMOON', cost:300,  preview:'linear-gradient(135deg, #1a0505, #3a0f0f)',  desc:'Crimson ritual energy'},
-  {id:'emerald',   name:'EMERALD',   cost:250,  preview:'linear-gradient(135deg, #021a0e, #064020)',  desc:'Green prosperity aura'},
-  {id:'diamond',   name:'DIAMOND',   cost:400,  preview:'linear-gradient(135deg, #050a18, #0c2040)',  desc:'Crystal clarity mode'},
-  {id:'obsidian',  name:'OBSIDIAN',  cost:500,  preview:'linear-gradient(135deg, #080808, #222222)',  desc:'Void monochrome power'}
+  {id:'classic',   name:'CLASSIC',   cost:0,       preview:'linear-gradient(135deg, #1a0a02, #2a1505)',  desc:'Default gold & dark'},
+  {id:'amethyst',  name:'AMETHYST',  cost:20000,   preview:'linear-gradient(135deg, #0a0518, #2a1045)',  desc:'Purple mystic glow'},
+  {id:'emerald',   name:'EMERALD',   cost:35000,   preview:'linear-gradient(135deg, #021a0e, #064020)',  desc:'Green prosperity aura'},
+  {id:'bloodmoon', name:'BLOODMOON', cost:50000,   preview:'linear-gradient(135deg, #1a0505, #3a0f0f)',  desc:'Crimson ritual energy'},
+  {id:'diamond',   name:'DIAMOND',   cost:100000,  preview:'linear-gradient(135deg, #050a18, #0c2040)',  desc:'Crystal clarity mode'},
+  {id:'obsidian',  name:'OBSIDIAN',  cost:250000,  preview:'linear-gradient(135deg, #080808, #222222)',  desc:'Void monochrome power'},
+  {id:'matrix',    name:'THE MATRIX',cost:1000000, preview:'linear-gradient(135deg, #000500, #003300)',  desc:'Escape the simulation'}
 ];
 
 function renderSkinShop(){
@@ -2325,6 +2342,7 @@ function applySkin(skinId){
 }
 
 window.onload = async () => {
+    await initWeather();
     await Persistence.load();
     initReels();
     updateUI();
@@ -2337,6 +2355,10 @@ window.onload = async () => {
     musicOn = localStorage.getItem('gg33_music') !== 'false';
     document.getElementById('soundToggle').classList.toggle('off', !sfxOn);
     document.getElementById('musicToggle').classList.toggle('off', !musicOn);
+
+    document.addEventListener('click', () => {
+      initAudio();
+    }, {once:true});
 
     animate();
     
