@@ -2328,7 +2328,7 @@ function flashScreen(color,intensity){
   pCtx.save(); pCtx.globalAlpha=intensity; pCtx.fillStyle=color; pCtx.fillRect(0,0,pCanvas.width,pCanvas.height); pCtx.restore();
 }
 
-// ─── SKIN SHOP ────────────────────────────────────
+// ─── SKIN SHOP & DIGITAL GOODS ──────────────────────
 const SKIN_DEFS = [
   {id:'classic',   name:'CLASSIC',   cost:0,       preview:'linear-gradient(135deg, #1a0a02, #2a1505)',  desc:'Default gold & dark'},
   {id:'amethyst',  name:'AMETHYST',  cost:20000,   preview:'linear-gradient(135deg, #0a0518, #2a1045)',  desc:'Purple mystic glow'},
@@ -2336,7 +2336,8 @@ const SKIN_DEFS = [
   {id:'bloodmoon', name:'BLOODMOON', cost:50000,   preview:'linear-gradient(135deg, #1a0505, #3a0f0f)',  desc:'Crimson ritual energy'},
   {id:'diamond',   name:'DIAMOND',   cost:100000,  preview:'linear-gradient(135deg, #050a18, #0c2040)',  desc:'Crystal clarity mode'},
   {id:'obsidian',  name:'OBSIDIAN',  cost:250000,  preview:'linear-gradient(135deg, #080808, #222222)',  desc:'Void monochrome power'},
-  {id:'matrix',    name:'THE MATRIX',cost:1000000, preview:'linear-gradient(135deg, #000500, #003300)',  desc:'Escape the simulation'}
+  {id:'matrix',    name:'THE MATRIX',cost:1000000, preview:'linear-gradient(135deg, #000500, #003300)',  desc:'Escape the simulation'},
+  {id:'ebook',     name:'SECRETS E-BOOK', cost:100000, type:'external', preview:'linear-gradient(135deg, #2a1505, #ff8c00)',  desc:'Master numerology text. Private vault.'}
 ];
 
 function renderSkinShop(){
@@ -2365,29 +2366,53 @@ function renderSkinShop(){
     card.appendChild(priceEl);
     
     const btn = document.createElement('button');
-    btn.className = 'skin-btn' + (active ? ' equipped' : '');
-    if(active){
-      btn.textContent = 'ACTIVE';
-      btn.disabled = true;
-    } else if(owned){
-      btn.textContent = 'EQUIP';
-      btn.onclick = () => { activeSkin = skin.id; applySkin(skin.id); Persistence.save(); renderSkinShop(); };
+    btn.className = 'skin-btn' + (active && skin.type !== 'external' ? ' equipped' : '');
+    
+    if(skin.type === 'external'){
+      if(owned){
+        btn.textContent = 'ACCESS VAULT';
+        btn.onclick = () => { window.location.href = 'master-vault.html'; };
+      } else {
+        btn.textContent = 'BUY';
+        btn.onclick = () => {
+          if(credits >= skin.cost){
+            credits -= skin.cost;
+            ownedSkins.push(skin.id);
+            updateUI();
+            Persistence.save();
+            renderSkinShop();
+            window.location.href = 'master-vault.html';
+          } else {
+            setMsg('NEED ' + skin.cost + ' CREDITS', false);
+            try{playTone(150,0.2,'square',0.1);}catch(e){}
+            showAdRefill();
+          }
+        };
+      }
     } else {
-      btn.textContent = 'BUY';
-      btn.onclick = () => {
-        if(credits >= skin.cost){
-          credits -= skin.cost;
-          ownedSkins.push(skin.id);
-          activeSkin = skin.id;
-          applySkin(skin.id);
-          updateUI();
-          Persistence.save();
-          renderSkinShop();
-          setMsg(skin.name + ' UNLOCKED!', true);
-        } else {
-          setMsg('NEED ' + skin.cost + ' CREDITS', false);
-        }
-      };
+      if(active){
+        btn.textContent = 'ACTIVE';
+        btn.disabled = true;
+      } else if(owned){
+        btn.textContent = 'EQUIP';
+        btn.onclick = () => { activeSkin = skin.id; applySkin(skin.id); Persistence.save(); renderSkinShop(); };
+      } else {
+        btn.textContent = 'BUY';
+        btn.onclick = () => {
+          if(credits >= skin.cost){
+            credits -= skin.cost;
+            ownedSkins.push(skin.id);
+            activeSkin = skin.id;
+            applySkin(skin.id);
+            updateUI();
+            Persistence.save();
+            renderSkinShop();
+            setMsg(skin.name + ' UNLOCKED!', true);
+          } else {
+            setMsg('NEED ' + skin.cost + ' CREDITS', false);
+          }
+        };
+      }
     }
     card.appendChild(btn);
     container.appendChild(card);
