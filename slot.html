@@ -163,8 +163,9 @@ nav a:hover,nav a.active{color:var(--gold);}
 .btn-spin:active{top:3px;box-shadow:0 1px 0 #884400;}
 .btn-spin:disabled{opacity:.45;cursor:not-allowed;}
 .btn-spin:not(:disabled):hover{background:linear-gradient(135deg,#dd7711,#ff9911,#ffb533);box-shadow:0 4px 0 #884400,0 6px 20px rgba(255,165,0,0.5);}
-.btn-bet{flex:1;padding:15px 4px;background:var(--dark);border:2px solid rgba(255,165,0,0.35);border-radius:4px;color:var(--gold);font-family:'Press Start 2P',monospace;font-size:8px;cursor:pointer;transition:all .2s;letter-spacing:1px;}
-.btn-bet:hover{border-color:var(--gold);background:rgba(255,165,0,0.08);}
+.btn-bet{flex:1;padding:15px 4px;background:var(--dark);border:2px solid rgba(255,165,0,0.35);border-radius:4px;color:var(--gold);font-family:'Press Start 2P',monospace;font-size:8px;cursor:pointer;transition:all .1s cubic-bezier(0.4, 0, 0.2, 1);letter-spacing:1px;position:relative;top:0;}
+.btn-bet:hover{border-color:var(--gold);background:rgba(255,165,0,0.12);}
+.btn-bet:active{top:4px;border-color:var(--gold3);background:rgba(255,165,0,0.3);box-shadow:inset 0 4px 8px rgba(0,0,0,0.9);transform:scale(0.95);}
 
 /* ─── SPINS PANEL ──────────────────── */
 .spins-panel{width:100%;background:var(--panel);border:2px solid rgba(255,165,0,0.2);border-radius:6px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:9px;}
