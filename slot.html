@@ -868,8 +868,36 @@ let audioStarted = false;
 
 const bgMusic = new Audio();
 bgMusic.loop = true;
-bgMusic.volume = 0.45;
+bgMusic.volume = 0.20;
 let isRaining = false;
+
+const chiptune = {
+    playWin(tier) {
+        if (!sfxOn) return;
+        if (tier >= 5) sfxJackpot();
+        else sfxWin();
+    },
+    playTension(speed) {
+        if (!sfxOn) return;
+        playTension(0.1); // reused from global
+    },
+    playReelAnticipation(durationMs) {
+        if (!sfxOn) return;
+        const dur = durationMs / 1000;
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(40, audioCtx.currentTime); 
+        o.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + dur);
+        g.gain.setValueAtTime(0.0, audioCtx.currentTime);
+        g.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + (dur * 0.8));
+        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        o.start();
+        o.stop(audioCtx.currentTime + dur);
+    }
+};
 
 async function initWeather() {
   try {
