@@ -1484,13 +1484,13 @@ function processWin(res){
     winStreak++;
     
     // Streak Bonus Multiplier
-    const streakMult = Math.min(5, winStreak); // max 5x whole integers
+    const streakMult = Math.min(5, 1 + ((winStreak - 1) * 0.5)); // 1.5x, 2.0x, 2.5x
     const streakBonus = Math.floor(totalWin * (streakMult - 1));
     totalWin += streakBonus;
     
     credits += totalWin;
     const wv=document.getElementById('winVal');
-    wv.innerHTML=`+${totalWin}${winStreak > 1 ? `<br><span style="font-size:8px;color:#ffaa00;">(${streakMult}x STREAK!)</span>` : ''}`;
+    wv.innerHTML=`+${totalWin}${winStreak > 1 ? `<br><span style="font-size:8px;color:#ffaa00;">(${winStreak}x STREAK!)</span>` : ''}`;
     wv.classList.remove('bounce');void wv.offsetWidth;wv.classList.add('bounce');
     const wa=document.querySelector('.win-area');
     wa.classList.remove('flash');void wa.offsetWidth;wa.classList.add('flash');
