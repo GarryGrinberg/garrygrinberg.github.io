@@ -367,9 +367,9 @@ canvas.bw-coins { position:absolute; inset:0; z-index:2; pointer-events:none; }
 @keyframes bwPulseHint { 0%{opacity:0.25;} 100%{opacity:0.55;} }
 /* Title breathing glow (applied after pop) */
 .bw-title.breathing { animation:bwBreath 2s ease-in-out infinite alternate; }
-@keyframes bwBreath { 0%{transform:scale(1); text-shadow:0 0 30px rgba(255,215,0,0.8), 0 0 60px rgba(255,165,0,0.4), 4px 4px 0 #553300, -1px -1px 0 #ffeeaa;} 100%{transform:scale(1.06); text-shadow:0 0 50px rgba(255,215,0,1), 0 0 100px rgba(255,165,0,0.6), 5px 5px 0 #553300, -1px -1px 0 #ffeeaa;} }
+@keyframes bwBreath { 0%{opacity:1;transform:scale(1); text-shadow:0 0 30px rgba(255,215,0,0.8), 0 0 60px rgba(255,165,0,0.4), 4px 4px 0 #553300, -1px -1px 0 #ffeeaa;} 100%{opacity:1;transform:scale(1.06); text-shadow:0 0 50px rgba(255,215,0,1), 0 0 100px rgba(255,165,0,0.6), 5px 5px 0 #553300, -1px -1px 0 #ffeeaa;} }
 .bw-overlay.mega-tier .bw-title.breathing { animation:bwBreathMega 2s ease-in-out infinite alternate; }
-@keyframes bwBreathMega { 0%{transform:scale(1); text-shadow:0 0 30px rgba(255,68,255,0.8), 0 0 60px rgba(170,0,255,0.4), 4px 4px 0 #440044, -1px -1px 0 #ffaaff;} 100%{transform:scale(1.06); text-shadow:0 0 50px rgba(255,68,255,1), 0 0 100px rgba(170,0,255,0.6), 5px 5px 0 #440044, -1px -1px 0 #ffaaff;} }
+@keyframes bwBreathMega { 0%{opacity:1;transform:scale(1); text-shadow:0 0 30px rgba(255,68,255,0.8), 0 0 60px rgba(170,0,255,0.4), 4px 4px 0 #440044, -1px -1px 0 #ffaaff;} 100%{opacity:1;transform:scale(1.06); text-shadow:0 0 50px rgba(255,68,255,1), 0 0 100px rgba(170,0,255,0.6), 5px 5px 0 #440044, -1px -1px 0 #ffaaff;} }
 /* ─── CANVAS PARTICLES ─────────────────── */
 canvas#particleCanvas { position:fixed; inset:0; z-index:900; pointer-events:none; }
 canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
@@ -1774,7 +1774,10 @@ function triggerBigWinScreen(tier, amt, onComplete) {
             valObj.textContent = amt.toLocaleString();
             // Final ding
             if(sfxOn) { try { playTone(1200, 0.15, 'sine', 0.06); } catch(e){} }
-            // Start breathing animation on title
+            // Force opacity:1 before switching to breathing animation
+            // (base CSS has opacity:0; bwTitlePop sets it to 1 via forwards-fill,
+            //  but switching animation resets the fill — so pin it inline first)
+            title.style.opacity = '1';
             title.classList.add('breathing');
         }
     }
