@@ -1852,37 +1852,31 @@ function showWinLabel(txt){
 // ─── DIAGONAL MATRIX RAIN ─────────────────────────
 const rainDrops = [];
 const RAIN_CHARS = '1234567890'.split('');
-for(let i=0; i<150; i++) {
+for(let i=0; i<80; i++) {
    rainDrops.push({
-       x: Math.random() * window.innerWidth * 1.5 - (window.innerWidth*0.5), // wide spread for diagonal
+       x: Math.random() * window.innerWidth * 1.5 - (window.innerWidth*0.5),
        y: Math.random() * window.innerHeight,
-       s: Math.random() * 8 + 4, // speed
-       size: Math.random() * 8 + 8, // text size
+       s: Math.random() * 6 + 3,
+       size: Math.random() * 7 + 7,
        c: RAIN_CHARS[Math.floor(Math.random()*RAIN_CHARS.length)]
    });
 }
 function drawMatrixRain(ctx, canvas) {
-   ctx.fillStyle = 'rgba(0,0,0,0.15)'; // trails
+   // Draw on bgCanvas — behind all UI
+   ctx.fillStyle = 'rgba(0,0,0,0.25)'; // faster fade = less buildup
    ctx.fillRect(0,0,canvas.width,canvas.height);
    ctx.textAlign = 'center';
-   
-   ctx.shadowBlur = 5;
-   ctx.shadowColor = '#00ff44';
-   ctx.fillStyle = '#0f8'; // Bright green drops
+   ctx.shadowBlur = 4;
+   ctx.shadowColor = 'rgba(0,200,60,0.5)';
+   ctx.fillStyle = 'rgba(0,210,70,0.55)'; // dimmer green
    
    for(let i=0; i<rainDrops.length; i++){
        const d = rainDrops[i];
        ctx.font = d.size + 'px monospace';
        ctx.fillText(d.c, d.x, d.y);
-       
-       // Diagonal movement: right and down
        d.x += d.s * 0.3;
        d.y += d.s;
-       
-       // Flashing chars occasionally
        if(Math.random() < 0.05) d.c = RAIN_CHARS[Math.floor(Math.random()*RAIN_CHARS.length)];
-       
-       // Reset if falls off
        if(d.y > canvas.height || d.x > canvas.width) {
            d.y = -20;
            d.x = Math.random() * window.innerWidth * 1.5 - (window.innerWidth*0.5);
@@ -1894,16 +1888,21 @@ function drawMatrixRain(ctx, canvas) {
 function animate(){
   const pCanvas = document.getElementById('particleCanvas');
   const pCtx = pCanvas.getContext('2d');
+  const bgCanvas = document.getElementById('bgCanvas');
+  const bgCtx = bgCanvas.getContext('2d');
   
+  // Matrix rain goes on bgCanvas (behind all UI, not covering game)
   if(isRaining) {
-      drawMatrixRain(pCtx, pCanvas);
+      drawMatrixRain(bgCtx, bgCanvas);
   } else {
-      pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
+      bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
   }
   
+  // Win/spin particles stay on the foreground particleCanvas
+  pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
   for(const p of particles){if(!p.active)continue;p.update();p.draw(pCtx);}
   
-  // BG Update for Matrix etc
+  // Skin BG (matrix skin uses bgCanvas separately)
   if(activeSkin === 'matrix' && typeof drawMatrixBg === 'function') drawMatrixBg();
   
   requestAnimationFrame(animate);
