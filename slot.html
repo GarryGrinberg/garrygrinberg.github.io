@@ -522,7 +522,7 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
     <p style="font-family:Arial,sans-serif; font-size:12px; color:#bbb; line-height:1.6; margin-bottom:14px;">Your Life Path number comes from your full birth date (month, day, and year). In the GG33 framework, calculate it by adding every single digit of your birth date together individually until you reduce it down to a single digit—unless your final sum equals 11, 22, or 33. These are known as Master Numbers and are highly coveted within the academy, bringing intense energetic responsibilities to those who bear them.</p>
 
     <h3 style="font-family:'Cinzel',serif; font-size:12px; color:var(--gold2); margin-bottom:8px; letter-spacing:1px;">Understanding The Interactive Mechanics</h3>
-    <p style="font-family:Arial,sans-serif; font-size:12px; color:#bbb; line-height:1.6; margin-bottom:14px;">The simulation above is not just a slot machine; it is a teaching tool designed to mimic the volatility and hidden alignments of numerology. Entering your birthday calculates your Life Path and turns it into your "Lucky Number" for the session. As you spin the reels, your goal is to accumulate enough credits to access the esoteric knowledge hidden in the Vault below. Unlocking all 11 paths allows you to understand the full spectrum of Human dynamics—from the independent leadership of the 1 to the visionary teachings of the Master 33.</p>
+    <p style="font-family:Arial,sans-serif; font-size:12px; color:#bbb; line-height:1.6; margin-bottom:14px;">The simulation above is not just a slot machine; it is a teaching tool designed to mimic the volatility and hidden alignments of numerology. Entering your birthday calculates your Life Path and turns it into your "Lucky Number" for the session. As you spin the reels, your goal is to accumulate enough credits to unlock more of the GG33 system and understand the full spectrum of Human dynamics—from the independent leadership of the 1 to the visionary teachings of the Master 33.</p>
   </div>
 
   <div class="cta-strip">
@@ -2372,8 +2372,7 @@ const SKIN_DEFS = [
   {id:'bloodmoon', name:'BLOODMOON', cost:50000,   preview:'linear-gradient(135deg, #1a0505, #3a0f0f)',  desc:'Crimson ritual energy'},
   {id:'diamond',   name:'DIAMOND',   cost:100000,  preview:'linear-gradient(135deg, #050a18, #0c2040)',  desc:'Crystal clarity mode'},
   {id:'obsidian',  name:'OBSIDIAN',  cost:250000,  preview:'linear-gradient(135deg, #080808, #222222)',  desc:'Void monochrome power'},
-  {id:'matrix',    name:'THE MATRIX',cost:1000000, preview:'linear-gradient(135deg, #000500, #003300)',  desc:'Escape the simulation'},
-  {id:'ebook',     name:'SECRETS E-BOOK', cost:100000, type:'external', preview:'linear-gradient(135deg, #2a1505, #ff8c00)',  desc:'Master numerology text. Private vault.'}
+  {id:'matrix',    name:'THE MATRIX',cost:1000000, preview:'linear-gradient(135deg, #000500, #003300)',  desc:'Escape the simulation'}
 ];
 
 function renderSkinShop(){
@@ -2402,53 +2401,30 @@ function renderSkinShop(){
     card.appendChild(priceEl);
     
     const btn = document.createElement('button');
-    btn.className = 'skin-btn' + (active && skin.type !== 'external' ? ' equipped' : '');
+    btn.className = 'skin-btn' + (active ? ' equipped' : '');
     
-    if(skin.type === 'external'){
-      if(owned){
-        btn.textContent = 'ACCESS VAULT';
-        btn.onclick = () => { window.location.href = 'master-vault.html'; };
-      } else {
-        btn.textContent = 'BUY';
-        btn.onclick = () => {
-          if(credits >= skin.cost){
-            credits -= skin.cost;
-            ownedSkins.push(skin.id);
-            updateUI();
-            Persistence.save();
-            renderSkinShop();
-            window.location.href = 'master-vault.html';
-          } else {
-            setMsg('NEED ' + skin.cost + ' CREDITS', false);
-            try{playTone(150,0.2,'square',0.1);}catch(e){}
-            showAdRefill();
-          }
-        };
-      }
+    if(active){
+      btn.textContent = 'ACTIVE';
+      btn.disabled = true;
+    } else if(owned){
+      btn.textContent = 'EQUIP';
+      btn.onclick = () => { activeSkin = skin.id; applySkin(skin.id); Persistence.save(); renderSkinShop(); };
     } else {
-      if(active){
-        btn.textContent = 'ACTIVE';
-        btn.disabled = true;
-      } else if(owned){
-        btn.textContent = 'EQUIP';
-        btn.onclick = () => { activeSkin = skin.id; applySkin(skin.id); Persistence.save(); renderSkinShop(); };
-      } else {
-        btn.textContent = 'BUY';
-        btn.onclick = () => {
-          if(credits >= skin.cost){
-            credits -= skin.cost;
-            ownedSkins.push(skin.id);
-            activeSkin = skin.id;
-            applySkin(skin.id);
-            updateUI();
-            Persistence.save();
-            renderSkinShop();
-            setMsg(skin.name + ' UNLOCKED!', true);
-          } else {
-            setMsg('NEED ' + skin.cost + ' CREDITS', false);
-          }
-        };
-      }
+      btn.textContent = 'BUY';
+      btn.onclick = () => {
+        if(credits >= skin.cost){
+          credits -= skin.cost;
+          ownedSkins.push(skin.id);
+          activeSkin = skin.id;
+          applySkin(skin.id);
+          updateUI();
+          Persistence.save();
+          renderSkinShop();
+          setMsg(skin.name + ' UNLOCKED!', true);
+        } else {
+          setMsg('NEED ' + skin.cost + ' CREDITS', false);
+        }
+      };
     }
     card.appendChild(btn);
     container.appendChild(card);
