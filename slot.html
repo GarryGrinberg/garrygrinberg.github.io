@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>GG33 Life Path Calculator & Numerology Game — Discover Your Number</title>
 <meta name="description" content="Enter your birthday and discover your Life Path number with the GG33 interactive numerology game. Unlock all 11 life paths, learn master numbers, and win a free reading jackpot. Created by Gary 'The Numbers Guy' Grinberg.">
-<meta name="keywords" content="life path calculator, numerology calculator, life path number, GG33, Gary Grinberg, master numbers 11 22 33, numerology game, birth date numerology, what is my life path number, free numerology reading, numerology slot machine, destiny number">
+<meta name="keywords" content="life path calculator, lucky number calculator, GG33 numerology game, life path number, master numbers 11 22 33, Gary Grinberg, numerology slot game, birth date numerology">
 <meta name="author" content="Gary Grinberg - The Numbers Guy">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://www.gg33academy.org/slot.html">
@@ -91,12 +91,14 @@ nav a:hover,nav a.active{color:var(--gold);}
 .bd-panel::before{content:'';position:absolute;top:0;left:-100%;width:200%;height:1px;background:linear-gradient(90deg,transparent,var(--gold3),transparent);animation:shimmer 3s ease-in-out infinite;}
 @keyframes shimmer{0%{left:-100%;}100%{left:100%;}}
 .bd-title{font-size:9px;color:rgba(255,165,0,0.75);letter-spacing:2px;margin-bottom:10px;}
+.page-h1{font-size:16px;color:var(--gold3);letter-spacing:1px;line-height:1.4;text-align:center;margin:10px 0 14px;text-transform:uppercase;}
 .bd-input{width:100%;padding:10px 14px;background:#000;border:2px solid rgba(255,165,0,0.3);border-radius:4px;color:var(--gold);font-family:'Press Start 2P',monospace;font-size:12px;text-align:center;outline:none;letter-spacing:2px;transition:all .3s;}
 .bd-input:focus{border-color:var(--gold);box-shadow:0 0 10px var(--glow),0 0 20px var(--glow2);}
 .bd-input::placeholder{color:rgba(255,165,0,0.3);font-size:9px;}
 .btn-unlock{width:100%;margin-top:10px;padding:12px;background:rgba(255,165,0,0.1);border:2px solid rgba(255,165,0,0.4);border-radius:4px;color:var(--gold);font-family:'Press Start 2P',monospace;font-size:9px;cursor:pointer;letter-spacing:1px;transition:all .2s;}
 .btn-unlock:hover{background:rgba(255,165,0,0.2);border-color:var(--gold);transform:translateY(-1px);box-shadow:0 4px 12px var(--glow2);}
 .lp-badge{margin-top:10px;font-size:10px;color:var(--gold2);line-height:2.2;display:none;}
+.loop-note{margin-top:8px;font-size:8px;color:rgba(255,165,0,0.65);letter-spacing:1px;line-height:1.6;text-align:center;}
 
 /* ─── MACHINE ──────────────────────── */
 .machine{width:100%;background:var(--panel);border:3px solid var(--gold);border-radius:8px;box-shadow:0 0 30px var(--glow),inset 0 0 20px rgba(0,0,0,0.5);overflow:hidden;position:relative;}
@@ -390,7 +392,7 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
 <nav>
   <a href="index.html">Home</a>
   <a href="archive.html">Archive</a>
-  <a href="slot.html" class="active">Game</a>
+  <a href="slot.html" class="active">Unlock Your Numbers</a>
   <a href="about.html">About</a>
   <a href="terms.html">Terms</a>
 </nav>
@@ -412,10 +414,12 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
   </div>
 
   <div class="bd-panel">
+    <h1 class="page-h1">GG33 Life Path Calculator &amp; Lucky Number Slot Game</h1>
     <div class="bd-title">Enter Your Birthday to Unlock Your Lucky Numbers</div>
     <input type="text" class="bd-input" id="bdInput" placeholder="MM/DD/YYYY" autocomplete="off">
-    <button class="btn-unlock" id="btnUnlock" onclick="unlockLP()">&#128273; Activate My Numbers</button>
+    <button class="btn-unlock" id="btnUnlock" onclick="unlockLP()">&#128273; Activate My Numbers & Start the Credit Loop</button>
     <div class="lp-badge" id="lpBadge"></div>
+    <div class="loop-note">UNLOCK YOUR NUMBERS, BUILD CREDITS, THEN KEEP SPINNING TO OPEN MORE OF THE GG33 SYSTEM.</div>
   </div>
 
   <div class="machine">
@@ -454,8 +458,9 @@ canvas#bgCanvas { position:fixed; inset:0; z-index:-1; pointer-events:none; }
 
   <div class="spins-panel">
     <div class="stat-box" style="text-align: left;">
-      <div class="sp-label">LIFETIME SPINS</div>
-      <div class="sp-val" id="spinsVal">0</div>
+    <div class="sp-label">LIFETIME SPINS</div>
+    <div class="sp-val" id="spinsVal">0</div>
+    <div class="sp-sub" style="color:rgba(255,165,0,0.55);font-size:8px;margin-top:4px;">MORE SPINS = MORE CREDITS, UNLOCKS, AND SESSION DEPTH</div>
     </div>
   </div>
 
