@@ -100,10 +100,26 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { background:#1e1e1e; color:#e8e8e8; font-family:'Arial',sans-serif; min-height:100%; }
 
-nav { background:#141414; border-bottom:1px solid rgba(255,165,0,0.15); display:flex; justify-content:center; flex-wrap:wrap; }
+nav { background:#141414; border-bottom:1px solid rgba(255,165,0,0.15); display:flex; justify-content:center; flex-wrap:wrap; align-items:center; }
 nav a { font-family:'Arial Narrow',Arial,sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,165,0,0.45); text-decoration:none; padding:10px 16px; border-right:1px solid rgba(255,165,0,0.1); transition:color .2s; }
 nav a:last-child { border-right:none; }
 nav a:hover, nav a.active { color:#ffa500; }
+nav a.nav-cta { background:linear-gradient(135deg,#ff8c00,#ffa500); color:#000 !important; font-weight:900; padding:8px 16px; margin:6px 8px; border-radius:5px; border-right:none; }
+nav a.nav-cta:hover { color:#000 !important; background:linear-gradient(135deg,#ffa500,#ffb84d); }
+nav a.nav-redeem { color:#ffa500; border-right:none; }
+nav a.nav-redeem:hover { color:#ffb733; background:rgba(255,165,0,0.05); }
+
+.hero-cta-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.hero-cta.secondary { background:transparent; color:#ffa500; border:2px solid #ffa500; padding:12px 28px; }
+.hero-cta.secondary:hover { background:rgba(255,165,0,0.1); transform:translateY(-2px); box-shadow:0 6px 20px rgba(255,165,0,0.15); color:#ffa500; }
+
+.reading-banner { background:linear-gradient(135deg,rgba(255,140,0,0.18),rgba(255,165,0,0.08)); border:1px solid rgba(255,165,0,0.3); border-radius:10px; padding:28px 24px; margin:36px 0; text-align:center; }
+.reading-banner h3 { font-size:1.4em; color:#ffa500; margin-bottom:8px; font-family:'Arial Black',sans-serif; }
+.reading-banner p { color:#ccc; margin-bottom:16px; font-size:0.95em; line-height:1.6; }
+.reading-banner .main-btn { display:inline-block; background:linear-gradient(135deg,#ff8c00,#ffa500); color:#000; font-weight:bold; font-size:15px; letter-spacing:1px; text-transform:uppercase; text-decoration:none; padding:14px 34px; border-radius:6px; transition:all .2s; }
+.reading-banner .main-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(255,165,0,0.3); color:#000; }
+.reading-banner .sub-line { color:#888; font-size:12px; margin-top:12px; }
+.reading-banner .sub-line a { color:#ffa500; }
 
 a { color:#ffa500; text-decoration:none; transition:color .2s; }
 a:hover { color:#ffb733; }
@@ -191,13 +207,18 @@ a:hover { color:#ffb733; }
   <a href="slot.html">Unlock Your Numbers</a>
   <a href="about.html">About</a>
   <a href="terms.html">Terms</a>
+  <a href="https://checkout.gg33academy.org/redeem" class="nav-redeem">Redeem Code</a>
+  <a href="https://checkout.gg33academy.org" class="nav-cta">Get Reading</a>
 </nav>
 
 <div class="hero">
   <div class="logo">GG33</div>
   <h1>The Numbers Guy</h1>
   <p class="hero-desc">Gary Grinberg's numerology system reveals the blueprint hidden in your birthday. Enter the game, unlock your Life Path and Lucky Number, and keep spinning through the GG33 credit loop.</p>
-  <a href="slot.html" class="hero-cta">Enter Your Birthday & Spin</a>
+  <div class="hero-cta-row">
+    <a href="slot.html" class="hero-cta">Enter Your Birthday & Spin</a>
+    <a href="https://checkout.gg33academy.org" class="hero-cta secondary">Get Personal Reading &rarr;</a>
+  </div>
   <p class="hero-loop-note">Start in the game first. The goal is to unlock numbers, use credits, and keep the session moving.</p>
   <p class="hero-subcta">Not ready to spin yet? <a href="lifepath.html">Start with the Life Path Calculator.</a></p>
 </div>
@@ -222,7 +243,7 @@ a:hover { color:#ffb733; }
       <h3>Weekly Newsletter</h3>
       <p>Free numerology insights delivered every week. Celebrity readings, timing cycles, and practical guidance.</p>
     </a>
-    <a href="https://square.link/u/sHFh39O5" class="feature" target="_blank">
+    <a href="https://checkout.gg33academy.org" class="feature" target="_blank">
       <div class="feature-icon">📊</div>
       <h3>Personal Readings</h3>
       <p>Get a comprehensive report covering your Life Path, compatibility, year cycles, and career alignment.</p>
@@ -261,6 +282,13 @@ a:hover { color:#ffb733; }
       <a href="slot.html" class="lp-card master" data-lp="33"><div class="locked-view"><span class="lp-num">33</span><div class="lp-name">???</div><div class="lp-desc">🔒 Play Slot to Unlock</div></div><div class="unlocked-view"><span class="lp-num">33</span><div class="lp-name">The Master Teacher</div><div class="lp-desc">Master Number. The rarest path — born to uplift and teach.</div></div></a>
     </div>
     <p style="margin-top:16px;">Master Numbers (11, 22, 33) carry amplified energy and are never reduced to single digits in the GG33 system. These are the most powerful — and rarest — Life Path numbers.</p>
+  </div>
+
+  <div class="reading-banner">
+    <h3>Want your full reading?</h3>
+    <p>18-25 page personalized PDF: Life Path, Power Years, Enemy Years, Chinese Zodiac overlay, and 162 celebrity matches to your exact numbers.</p>
+    <a href="https://checkout.gg33academy.org" class="main-btn">Get My Reading — $134</a>
+    <p class="sub-line">Bundle 2, 3, or 5 readings and save · <a href="https://checkout.gg33academy.org/redeem">Got a hat code? Redeem it here</a></p>
   </div>
 
   <div class="section-label">How Life Path Numbers Work</div>
