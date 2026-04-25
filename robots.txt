@@ -17,4 +17,4 @@ Allow: /
 User-agent: anthropic-ai
 Allow: /
 
-Sitemap: https://www.gg33academy.org/sitemap.xml
+Sitemap: https://gg33academy.org/sitemap.xml
