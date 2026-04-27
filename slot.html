@@ -1014,11 +1014,36 @@ function calcLP(m,d,y){
 function parseBD(raw){
   let s=raw.trim().replace(/(\d+)(st|nd|rd|th)/gi,'$1');
   const MN={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12,january:1,february:2,march:3,april:4,june:6,july:7,august:8,september:9,october:10,november:11,december:12};
+  const rawNums=s.match(/\d+/g)||[];
+  const compact=s.replace(/\D/g,'');
+  if(rawNums.length===1){
+    const yyToYear=yy=>yy<30?2000+yy:1900+yy;
+    const tryParts=(a,b,c)=>{
+      const m=parseInt(compact.slice(0,a),10);
+      const d=parseInt(compact.slice(a,a+b),10);
+      const yRaw=compact.slice(a+b,a+b+c);
+      const y=c===2?yyToYear(parseInt(yRaw,10)):parseInt(yRaw,10);
+      if(m>=1&&m<=12&&d>=1&&d<=31&&y>=1900&&y<=2026)return{m,d,y};
+      return null;
+    };
+    const twoDigitMonth=parseInt(compact.slice(0,2),10);
+    const twoDigitMonthFirst=twoDigitMonth>=10&&twoDigitMonth<=12;
+    const patternsByLength={
+      8:[[2,2,4]],
+      7:twoDigitMonthFirst?[[2,1,4],[1,2,4]]:[[1,2,4],[2,1,4]],
+      6:[[1,1,4],[2,2,2]],
+      5:twoDigitMonthFirst?[[2,1,2],[1,2,2]]:[[1,2,2],[2,1,2]]
+    };
+    for(const parts of (patternsByLength[compact.length]||[])){
+      const parsed=tryParts(...parts);
+      if(parsed)return parsed;
+    }
+  }
   let mFN=null;
   for(let k in MN){if(new RegExp('\\b'+k+'\\b','i').test(s)){mFN=MN[k];s=s.replace(new RegExp(k,'i'),' ');break;}}
   let nums=s.match(/\d+/g);if(!nums)return null;
   let year=null,rest=[];
-  for(let n of nums){let v=parseInt(n);if(!year&&n.length===4&&v>=1900&&v<=2025)year=v;else rest.push(v);}
+  for(let n of nums){let v=parseInt(n);if(!year&&n.length===4&&v>=1900&&v<=2026)year=v;else rest.push(v);}
   if(!year&&rest.length>0){let l=rest[rest.length-1];if(l>=0&&l<=99){year=l<30?2000+l:1900+l;rest=rest.slice(0,-1);}}
   if(!year)return null;
   let m,d;
